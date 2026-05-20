@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>British Idioms</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    min-height: 100vh;
+    background: #1a2e1a;
+    background-image: radial-gradient(ellipse at top, #2d4a2d 0%, #1a2e1a 70%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: 'Lato', sans-serif; color: #f5e6c8; padding: 20px;
+  }
+  h1 { font-family: 'Playfair Display', serif; font-size: 1.6rem; letter-spacing: 2px; color: #d4a843; margin-bottom: 6px; text-align: center; }
+  .subtitle { font-size: 0.8rem; color: #8a9e8a; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 24px; }
+  .tabs { display: flex; margin-bottom: 20px; border: 1px solid #3d5c3d; border-radius: 8px; overflow: hidden; }
+  .tab { padding: 8px 22px; font-size: 0.8rem; letter-spacing: 1px; cursor: pointer; background: #1e321e; color: #6a8a6a; border: none; transition: all 0.2s; font-family: 'Lato', sans-serif; }
+  .tab.active { background: #2d4a2d; color: #d4a843; }
+  .scene { width: 360px; height: 460px; perspective: 1000px; cursor: pointer; }
+  .card { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.7s cubic-bezier(0.4,0,0.2,1); }
+  .card.flipped { transform: rotateY(180deg); }
+  .face {
+    position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+    border-radius: 16px; padding: 32px 28px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    border: 1px solid #3d5c3d;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(212,168,67,0.2);
+  }
+  .front { background: linear-gradient(145deg, #243824, #1e321e); }
+  .back { background: linear-gradient(145deg, #2a3d1e, #1e2d14); transform: rotateY(180deg); justify-content: flex-start; padding-top: 24px; }
+  .crown { font-size: 2rem; margin-bottom: 14px; }
+  .idiom { font-family: 'Playfair Display', serif; font-size: 1.45rem; color: #d4a843; text-align: center; line-height: 1.4; margin-bottom: 18px; }
+  .label { font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; color: #6a8a6a; margin-bottom: 8px; }
+  .meaning { font-size: 0.95rem; color: #c8d8c8; text-align: center; line-height: 1.6; }
+  .hint { margin-top: 24px; font-size: 0.72rem; color: #4a6a4a; letter-spacing: 1px; }
+  .back-idiom { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: #d4a843; text-align: center; margin-bottom: 16px; font-style: italic; }
+  .story-label { font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; color: #6a8a6a; margin-bottom: 10px; align-self: flex-start; }
+  .story { font-size: 0.85rem; color: #c8d8c8; line-height: 1.75; overflow-y: auto; flex: 1; width: 100%; }
+  .story::-webkit-scrollbar { width: 3px; }
+  .story::-webkit-scrollbar-thumb { background: #3d5c3d; border-radius: 2px; }
+  .controls { display: flex; gap: 10px; margin-top: 20px; align-items: center; }
+  .btn { padding: 11px 20px; border: 1px solid #3d5c3d; border-radius: 8px; background: #243824; color: #d4a843; font-family: 'Lato', sans-serif; font-size: 0.85rem; letter-spacing: 1px; cursor: pointer; transition: all 0.2s; }
+  .btn:hover { background: #2d4a2d; border-color: #d4a843; }
+  .btn:active { transform: scale(0.97); }
+  .btn-icon { padding: 11px 13px; font-size: 1.1rem; }
+  .btn-fav.active { color: #e8a0a0; border-color: #c06060; background: #2d1e1e; }
+  .btn-sound.playing { border-color: #d4a843; background: #2d4a1a; }
+  .counter { font-size: 0.75rem; color: #4a6a4a; letter-spacing: 2px; margin-top: 12px; }
+  .progress { display: flex; gap: 3px; margin-top: 10px; flex-wrap: wrap; justify-content: center; max-width: 360px; }
+  .pip { width: 8px; height: 8px; border-radius: 50%; background: #2d4a2d; border: 1px solid #3d5c3d; transition: background 0.3s; }
+  .pip.seen { background: #4a6a4a; }
+  .pip.current { background: #d4a843; }
+  .fav-view { display: none; width: 360px; }
+  .fav-view.visible { display: block; }
+  .fav-empty { text-align: center; color: #4a6a4a; font-style: italic; font-family: 'Playfair Display', serif; padding: 40px 0; }
+  .fav-list { display: flex; flex-direction: column; gap: 10px; max-height: 460px; overflow-y: auto; }
+  .fav-list::-webkit-scrollbar { width: 3px; }
+  .fav-list::-webkit-scrollbar-thumb { background: #3d5c3d; border-radius: 2px; }
+  .fav-item { background: linear-gradient(145deg, #243824, #1e321e); border: 1px solid #3d5c3d; border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; gap: 10px; transition: border-color 0.2s; }
+  .fav-item:hover { border-color: #d4a843; }
+  .fav-item-text { flex: 1; }
+  .fav-item-idiom { font-family: 'Playfair Display', serif; color: #d4a843; font-size: 0.92rem; margin-bottom: 3px; }
+  .fav-item-meaning { font-size: 0.76rem; color: #8a9e8a; }
+  .fav-remove { background: none; border: none; color: #c06060; font-size: 1rem; cursor: pointer; opacity: 0.6; transition: opacity 0.2s; padding: 4px; }
+  .fav-remove:hover { opacity: 1; }
+  .fav-play { background: none; border: none; color: #d4a843; font-size: 1rem; cursor: pointer; opacity: 0.6; transition: opacity 0.2s; padding: 4px; }
+  .fav-play:hover { opacity: 1; }
+</style>
+</head>
+<body>
+<h1>🇬🇧 British Idioms</h1>
+<p class="subtitle">語源と裏話で学ぶ</p>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('cards')">📖 カード</button>
+  <button class="tab" onclick="showTab('favs')" id="fav-tab">⭐ お気に入り <span id="fav-count"></span></button>
+</div>
+
+<div id="card-view">
+  <div class="scene" onclick="flipCard()">
+    <div class="card" id="card">
+      <div class="face front">
+        <div class="crown">👑</div>
+        <div id="front-content"></div>
+      </div>
+      <div class="face back">
+        <div id="back-content" style="width:100%;display:flex;flex-direction:column;height:100%"></div>
+      </div>
+    </div>
+  </div>
+  <div class="controls">
+    <button class="btn btn-icon btn-fav" id="fav-btn" onclick="toggleFav(event)" title="お気に入り">🤍</button>
+    <button class="btn btn-icon btn-sound" id="sound-btn" onclick="playSound(event)" title="音声再生">🔊</button>
+    <button class="btn" onclick="prevCard()">← 前</button>
+    <button class="btn" onclick="nextCard()">次 →</button>
+  </div>
+  <div class="counter" id="counter"></div>
+  <div class="progress" id="progress"></div>
+</div>
+
+<div class="fav-view" id="fav-view">
+  <div id="fav-list-container"></div>
+</div>
+
+<script>
+const IDIOMS = [
+  { idiom: "Bob's your uncle", meaning: "「あっという間に完了！」という意味。何かを簡単に達成できることを表す。", story: "1887年、英国首相ロバート・セシルが甥のアーサー・バルフォアを要職に任命したことが由来とされる。縁故採用があまりにもあっけなく行われたことから、「はい、できあがり！」という意味が生まれた。当時の英国社会での縁故主義を皮肉った表現でもある。" },
+  { idiom: "Bite the bullet", meaning: "「歯を食いしばって耐える」という意味。苦しいことを我慢して乗り越えること。", story: "19世紀の戦場で、麻酔なしに手術を行う際、兵士に銃弾を噛ませて痛みに耐えさせたことが由来。ラッドヤード・キップリングの小説にも登場し、広く知られるようになった。現代では困難な決断を下す場面でよく使われる。" },
+  { idiom: "Raining cats and dogs", meaning: "「土砂降り」という意味。激しい雨が降っている状態を表す。", story: "17世紀のロンドンでは排水設備が整っておらず、大雨のたびに路上の死んだ動物が流されてきた。詩人ジョナサン・スウィフトが1710年の詩でこの表現を使ったのが最初の記録とされる。当時の街の惨状が今も慣用句として生き残っている。" },
+  { idiom: "Break a leg", meaning: "「頑張って！」「うまくいくといいね！」という意味の励ましの言葉。", story: "演劇界の迷信から生まれた表現。舞台で「グッドラック」と言うと逆に不運を招くと信じられていたため、反対のことを言うようになった。膝を深く曲げてお辞儀すること（break the leg line）が成功の証だったという説もある。" },
+  { idiom: "Kick the bucket", meaning: "「死ぬ」という意味の婉曲表現。", story: "中世の絞首刑で、罪人が乗る桶（bucket）を蹴って処刑が行われたことが由来とされる。また、豚を屠殺する際に使われた木製の桶を指すという説もある。いずれにせよ16世紀ごろから使われている歴史ある表現だ。" },
+  { idiom: "The bee's knees", meaning: "「最高のもの」「一流のもの」という意味。", story: "1920年代のアメリカ発祥だが英国でも広く使われるようになった。禁酒法時代のジャズ文化の中で生まれたスラング。ミツバチの膝は非常に小さく精巧であることから「精巧で素晴らしいもの」を指すようになったとされる。" },
+  { idiom: "Costs an arm and a leg", meaning: "「非常に高額」という意味。法外な値段がすることを表す。", story: "18〜19世紀、肖像画の値段は描く体の部位の数で決まっていたという説がある。全身像は顔だけより何倍も高かった。また戦争で手足を失う犠牲と結びつける説もある。いずれも「大きな代償」というイメージから来ている。" },
+  { idiom: "Barking up the wrong tree", meaning: "「見当違いのことをする」「的外れな努力をする」という意味。", story: "狩猟犬が獲物を木に追い込んだと思って吠え続けるが、実は獲物はすでに逃げていたという狩猟シーンから生まれた。19世紀のアメリカ文学に初出が見られ、英国にも渡って定着した。努力の方向を間違える様子を巧みに表している。" },
+  { idiom: "Let the cat out of the bag", meaning: "「秘密を漏らす」という意味。意図せず秘密を明かしてしまうこと。", story: "中世の市場で、豚の代わりに猫を袋に入れて売る詐欺が横行していた。買い手が袋を開けると猫が飛び出し、詐欺が発覚した。この「bag」はおそらく布の袋のことで、16世紀にはすでに比喩として使われていた記録がある。" },
+  { idiom: "Once in a blue moon", meaning: "「めったにない」「ごくたまに」という意味。", story: "「ブルームーン」とは1か月に2度満月が来る珍しい現象のこと。平均で約2〜3年に1度しか起きない。16世紀に「あり得ないこと」を指す表現として登場し、やがて「非常に稀なこと」を意味するようになった。" },
+  { idiom: "Spill the beans", meaning: "「秘密をしゃべる」「うっかり本当のことを言ってしまう」という意味。", story: "古代ギリシャで投票に豆を使っていたことが起源とされる。白い豆が賛成、黒い豆が反対を表し、こぼれると結果が公になってしまった。20世紀初頭のアメリカで広まり、英国にも定着した表現だ。" },
+  { idiom: "Hit the nail on the head", meaning: "「的確に言い当てる」「まさにその通り」という意味。", story: "大工仕事で釘を正確に頭に打つことが由来。15世紀のラテン語の表現にも類似のものがあり、ヨーロッパ全体で古くから使われてきた。現在では何かをズバリ言い当てたときに使われる非常にポジティブな表現だ。" },
+  { idiom: "Burning the midnight oil", meaning: "「夜遅くまで働く・勉強する」という意味。", story: "電気がなかった時代、夜遅くまで仕事や勉強をするにはオイルランプが必要だった。詩人フランシス・クワールズが1635年の詩でこの表現を使ったのが初出とされる。現代でも受験生や締め切りに追われるビジネスマンの状況を描写するのに使われる。" },
+  { idiom: "Bite off more than you can chew", meaning: "「身の丈に合わないことを引き受ける」「手に負えないことをしようとする」という意味。", story: "噛みきれないほど大きな食べ物を口に入れてしまう様子から。アメリカ南部でタバコを噛む習慣があり、一度に噛める量以上を口に含もうとする行為に由来するという説もある。19世紀後半から使われ始めた表現だ。" },
+  { idiom: "Pulling someone's leg", meaning: "「からかう」「冗談を言う」という意味。", story: "19世紀のスリの手口から来ているという説がある。仲間が足を引っ張って注意をそらし、その隙に財布を盗むという手法だ。しかし現在では悪意なく「冗談を言う」という軽いニュアンスで使われることがほとんど。" },
+  { idiom: "The ball is in your court", meaning: "「あとはあなた次第」「決断はあなたに委ねられている」という意味。", story: "テニスコートから来た表現。相手のコートにボールがある間は自分には何もできず、相手が打ち返すのを待つしかない。1960年代から比喩的に使われるようになり、ビジネスの交渉場面でもよく使われる。" },
+  { idiom: "Throw in the towel", meaning: "「諦める」「降参する」という意味。", story: "ボクシングで、選手のコーナーにいるトレーナーがリングにタオルを投げ込んで棄権を意味したことが起源。20世紀初頭にスポーツ用語として使われ始め、日常会話にも広まった。「ギブアップ」と同じニュアンス。" },
+  { idiom: "Under the weather", meaning: "「体調が悪い」「気分がすぐれない」という意味。", story: "船乗りの言葉に由来する。嵐などで船の甲板が荒れているとき、船酔いした船員は船の下部（風下・weather側の下）に移動して休んだことから。19世紀の航海時代に生まれた表現で、現在でも軽い体調不良を表すのに広く使われる。" },
+  { idiom: "Hit the sack", meaning: "「寝る」「就寝する」という意味。", story: "かつてのベッドは藁を入れた麻袋（sack）で作られており、就寝することを「袋に入る」と表現した。20世紀のアメリカ軍スラングとして広まり、英国にも伝わった。「hit the hay」も同じ意味の類似表現。" },
+  { idiom: "Straight from the horse's mouth", meaning: "「信頼できる情報源から直接聞いた」という意味。", story: "馬の年齢を知る最も確実な方法は歯を見ることで、馬自身の「口」が最も正確な情報源だった。競馬の世界から生まれた表現で、20世紀初頭から使われている。一次情報や信頼できる情報を指すときに使う。" },
+  { idiom: "A penny for your thoughts", meaning: "「何を考えているの？」という意味。相手の考えを聞きたいときに使う。", story: "16世紀のトーマス・モアの著作に最初の記録がある。当時の1ペニーは今よりはるかに価値があった。無口な相手や物思いにふけっている人に「考えを教えてくれれば1ペニーあげる」と言ったことが由来。" },
+  { idiom: "On the fence", meaning: "「どちらともつかない」「態度を決めかねている」という意味。", story: "フェンスの上に座って、どちらの側に降りるか決められない状態を表す。19世紀アメリカの政治用語として広まり、選挙で特定候補を支持しない有権者を指していた。現在では日常的な優柔不断も指す。" },
+  { idiom: "Burn bridges", meaning: "「関係を断つ」「退路を断つ」という意味。", story: "戦争で敵の追撃を防ぐために橋を燃やし、引き返せなくした戦術から。ジュリアス・シーザーもこの戦術を用いたとされる。現代では人間関係や仕事上のつながりを完全に断つことを指す。" },
+  { idiom: "Beat around the bush", meaning: "「遠回しに言う」「本題を避ける」という意味。", story: "鳥を狩る際、藪を棒で叩いて鳥を追い出す「打ち手」の役割から。本命の仕事（鳥を捕まえること）をせず、藪を叩くばかりの様子が由来。15世紀の詩にも登場する古い表現だ。" },
+  { idiom: "Caught red-handed", meaning: "「現行犯で捕まる」「証拠を握られる」という意味。", story: "中世スコットランドの法律に由来する。獣を密猟した場合、その動物の血が手についているうちに捕まれば有罪の証拠となった。15世紀のスコットランドの法典に記録があり、英国全土に広まった。" },
+  { idiom: "Bite the dust", meaning: "「死ぬ」「失敗する」「倒れる」という意味。", story: "ホメロスの叙事詩に類似の表現があり、戦場で倒れた兵士が地面の砂（dust）に顔をつける描写に由来。西部劇映画で多用されたことで現代に広まった。現在ではプロジェクトの失敗にも使われる。" },
+  { idiom: "Let sleeping dogs lie", meaning: "「寝た子を起こすな」「余計なことをして問題を起こすな」という意味。", story: "眠っている犬を起こすと噛まれる危険があることから。チョーサーの14世紀の作品にも類似の表現が登場する非常に古い慣用句。英国では穏やかに問題を避ける文化と結びつき、今でもよく使われる。" },
+  { idiom: "Speak of the devil", meaning: "「噂をすれば影」という意味。話題にしていた人がちょうど現れたときに使う。", story: "「悪魔の名を口にすると悪魔が現れる」というキリスト教的な迷信から。17世紀の英国で記録が残り、悪魔の名を言うことを禁じる宗教的戒めが日常表現に変化した。今では悪意なく使われるユーモラスな表現。" },
+  { idiom: "Give the cold shoulder", meaning: "「冷たくあしらう」「無視する」という意味。", story: "中世ヨーロッパで、歓迎しない客人には温かい食事ではなく冷たい肩肉（cold shoulder of mutton）を出したという説がある。スコットランドの作家ウォルター・スコットが19世紀に使って広めた。" },
+  { idiom: "Not my cup of tea", meaning: "「自分の趣味ではない」「好みではない」という意味。", story: "英国の紅茶文化から生まれた表現。紅茶は英国人にとって非常に個人的な好みがある飲み物で、自分の好みに合わないものを「自分のカップのお茶ではない」と表現した。20世紀初頭から記録されている。" },
+  { idiom: "Kick the bucket", meaning: "「死ぬ」という意味の婉曲表現。", story: "中世の絞首刑で罪人が乗る桶を蹴る処刑方法が由来とされる。また豚を屠殺する際の木製の桶を指すという説もある。16世紀から使われている表現で、ユーモラスなニュアンスを持つ。" },
+  { idiom: "The whole nine yards", meaning: "「全部」「すべて」という意味。何もかも含めたすべてを指す。", story: "第二次世界大戦中の戦闘機の機銃弾薬帯の長さ（約9ヤード）から来ているという説が有力。全弾を撃ち尽くすことから「全力を出す・全部出す」という意味になった。正確な起源は今も議論が続く謎の多い表現。" },
+  { idiom: "Turn a blind eye", meaning: "「見て見ぬふりをする」「意図的に無視する」という意味。", story: "ナポレオン戦争中の海軍提督ホレーショ・ネルソンが、コペンハーゲン海戦で撤退命令を望遠鏡で見るよう言われた際、視力のない右目に望遠鏡を当てて「命令が見えない」と言ったという逸話が有名な由来とされる。" },
+  { idiom: "The straw that broke the camel's back", meaning: "「我慢の限界を超えさせた最後の一押し」という意味。", story: "重い荷物を運ぶラクダに少しずつ藁を載せていくと、最後の一本で倒れてしまうという比喩から。アラビアの格言に由来し、チャールズ・ディケンズの作品にも登場する。限界点を表す非常に視覚的な表現。" },
+  { idiom: "A blessing in disguise", meaning: "「災い転じて福となす」という意味。一見悪いことが結果的に良いことになること。", story: "18世紀の詩人ジェームズ・ハーヴェイの作品に初出が確認されている。宗教的な考え方、つまり神の意志は人間には理解できないが最終的には良い方向に向かうという思想が背景にある。" },
+  { idiom: "Bite the hand that feeds you", meaning: "「恩人に背く」「世話になっている人を傷つける」という意味。", story: "犬や家畜に餌をやっている手を噛まれるという文字通りの情景から。エドマンド・バークが1790年の著作でこの表現を使い、広まった。忘恩や背信の行為を批判するときに使われる表現。" },
+  { idiom: "Don't judge a book by its cover", meaning: "「外見で判断するな」という意味。", story: "19世紀に生まれたとされるが、正確な起源は不明。本の装丁が必ずしも内容の良し悪しを反映しない、という経験から生まれた知恵。20世紀に入ってから広く使われるようになり、今や世界共通の格言となっている。" },
+  { idiom: "Kill two birds with one stone", meaning: "「一石二鳥」という意味。一つの行動で二つの目的を達成すること。", story: "文字通り、一つの石で二羽の鳥を倒すという狩りの技から。ローマ時代にも類似の表現があり、非常に古い知恵を反映している。英語圏では最も古くから使われている慣用句の一つとされる。" },
+  { idiom: "Costs a pretty penny", meaning: "「かなりの高額」「相当なお金がかかる」という意味。", story: "「pretty」はここで「かなり・相当」という意味で使われ、「penny」は金額全般を表す。18世紀の英国文学に登場する表現で、「高い」とはっきり言わずに婉曲的に値段の高さを伝える英国らしいユーモア。" },
+  { idiom: "Over the moon", meaning: "「大喜び」「非常に幸せ」という意味。", story: "マザーグースの童謡「Hey Diddle Diddle」に登場する「牛が月を飛び越えた」という非現実的な情景から。19世紀には比喩的に使われており、英国では特に好んで使われる表現。サッカーの監督がよくインタビューで使うことでも有名。" },
+  { idiom: "Feeling under the weather", meaning: "「体調が優れない」「気分がよくない」という意味。", story: "航海用語に由来する。嵐の際、船酔いした乗組員は風上の甲板から風下の下の方（under the weather side）に移動した。19世紀の航海日誌にもこの表現が見られ、英国の海洋文化から生まれた慣用句。" },
+  { idiom: "Barmy", meaning: "「頭がおかしい」「常軌を逸している」という意味のイギリス英語特有のスラング。", story: "「barm」とはビールの醸造過程で生じる泡のこと。泡のようにフワフワしていて中身がない＝頭がおかしいという比喩。16世紀のイングランドで生まれた純粋な英国語で、アメリカ英語にはほとんど見られない。" },
+  { idiom: "Take the biscuit", meaning: "「呆れるほどひどい」「度を超している」という意味。良い意味でも皮肉な意味でも使う。", story: "コンテストで最も優秀な者にビスケットを贈る習慣から来ているとされる。英国の紅茶文化とビスケットへの愛着が生んだ表現で、アメリカでは「take the cake」という類似表現が使われる。" },
+  { idiom: "Chin up", meaning: "「元気を出して」「しっかりして」という意味の励ましの表現。", story: "顎（chin）を下に向けることは落ち込みや悲しみの姿勢を示す。逆に顎を上げることは自信や前向きさの象徴。英国では特に第二次世界大戦中に「Keep your chin up」として励ましの言葉として広まった。" },
+  { idiom: "In a pickle", meaning: "「困った状況にいる」「窮地に立たされている」という意味。", story: "16世紀のオランダ語「in de pekel zitten」（塩漬け液の中に座っている）から来たとされる。シェイクスピアの「テンペスト」にも登場する古い表現で、ピクルス液のように抜け出せない状況を表す。" },
+  { idiom: "On the blink", meaning: "「故障している」「調子が悪い」という意味。主に機械に対して使う。", story: "「blink」はランプが点滅する様子を指し、電球がちらつき始めると故障の前兆だったことから。20世紀初頭に電気が一般家庭に普及する中で生まれた表現。英国では家電の不調を表すのによく使われる。" },
+  { idiom: "Cock-up", meaning: "「大失敗」「へま」という意味。主に英国英語で使われるくだけた表現。", story: "印刷業の用語が起源とされる。活版印刷で文字が逆さになった（cock up）場合に使われた言葉が転じた説や、銃のコック（撃鉄）に由来する説など諸説ある。英国らしい自虐的ユーモアを含む表現。" },
+  { idiom: "Brilliant", meaning: "「素晴らしい！」「最高！」という感嘆の意味。英国英語では多様な場面で使われる。", story: "元々はフランス語の「brillant」（輝く）から来た言葉。英国では20世紀後半から感嘆詞的に使われるようになり、「great」や「awesome」の英国版として定着。皮肉的に使われることもある興味深い言葉。" },
+  { idiom: "Chuffed to bits", meaning: "「とても嬉しい」「大満足」という意味の英国独特の表現。", story: "「chuffed」は満足した様子を表す英国スラングで、蒸気機関車が満足そうに煙を吐く音「chuff」から来ているという説がある。「to bits」は強調表現。北部イングランドで特によく使われる温かみのある表現。" },
+  { idiom: "Blimey", meaning: "「なんと！」「まさか！」という驚きを表す感嘆詞。", story: "「Blind me（神よ、私を盲目にしてください）」が縮まった表現とされ、神への冒涜を避けるための婉曲形として生まれた。19世紀のロンドンのコックニー（下町）方言から広まった純粋な英国語。" },
+  { idiom: "Faff about", meaning: "「ぐずぐずする」「無駄に時間を使う」という意味の英国英語表現。", story: "18世紀の英語「faff」はもともと風が吹き乱れる様子を表した言葉。何も決まらずぐるぐると動き続ける様子が「ぐずぐずすること」に転じた。英国人が時間の無駄遣いを嘆くときによく使う表現。" },
+  { idiom: "Dodgy", meaning: "「怪しい」「信用できない」「質が悪い」という意味の英国スラング。", story: "「dodge」（素早く身をかわす）から派生した言葉で、19世紀に登場した。法律や道徳の境界線をすり抜けるような人物や物事を指す。英国では食べ物の質が悪いときにも「a bit dodgy」とよく使われる。" },
+];
+
+let idx = 0;
+let order = [];
+let favorites = [];
+let isFlipped = false;
+let isSpeaking = false;
+
+function shuffle(arr) {
+  let a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function init() {
+  order = shuffle(IDIOMS.map((_, i) => i));
+  buildProgress();
+  showCard();
+}
+
+function current() { return IDIOMS[order[idx]]; }
+
+function showCard() {
+  const c = current();
+  isFlipped = false;
+  document.getElementById('card').classList.remove('flipped');
+
+  document.getElementById('front-content').innerHTML = `
+    <div class="label">British Idiom</div>
+    <div class="idiom">"${c.idiom}"</div>
+    <div class="label">意味</div>
+    <div class="meaning">${c.meaning}</div>
+    <div class="hint">タップして裏話を見る →</div>
+  `;
+  document.getElementById('back-content').innerHTML = `
+    <div class="back-idiom">"${c.idiom}"</div>
+    <div class="story-label">📜 語源・裏話</div>
+    <div class="story">${c.story}</div>
+  `;
+
+  const isFav = favorites.some(f => f.idiom === c.idiom);
+  const favBtn = document.getElementById('fav-btn');
+  favBtn.textContent = isFav ? '❤️' : '🤍';
+  favBtn.classList.toggle('active', isFav);
+
+  updateProgress();
+  document.getElementById('counter').textContent = `${idx + 1} / ${IDIOMS.length}`;
+}
+
+function buildProgress() {
+  const el = document.getElementById('progress');
+  el.innerHTML = IDIOMS.map((_, i) => `<div class="pip" id="pip-${i}"></div>`).join('');
+}
+
+function updateProgress() {
+  document.querySelectorAll('.pip').forEach((p, i) => {
+    p.className = 'pip' + (i < idx ? ' seen' : i === idx ? ' current' : '');
+  });
+}
+
+function flipCard() {
+  if (!current()) return;
+  isFlipped = !isFlipped;
+  document.getElementById('card').classList.toggle('flipped', isFlipped);
+}
+
+function nextCard() {
+  stopSound();
+  idx = (idx + 1) % IDIOMS.length;
+  showCard();
+}
+
+function prevCard() {
+  stopSound();
+  idx = (idx - 1 + IDIOMS.length) % IDIOMS.length;
+  showCard();
+}
+
+function speak(text) {
+  speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'en-GB'; utt.rate = 0.85;
+  const voices = speechSynthesis.getVoices();
+  const v = voices.find(v => v.lang === 'en-GB') || voices.find(v => v.lang.startsWith('en'));
+  if (v) utt.voice = v;
+  speechSynthesis.speak(utt);
+  return utt;
+}
+
+function playSound(e) {
+  e.stopPropagation();
+  if (!current()) return;
+  if (isSpeaking) { stopSound(); return; }
+  const utt = speak(current().idiom);
+  isSpeaking = true;
+  document.getElementById('sound-btn').classList.add('playing');
+  utt.onend = utt.onerror = () => {
+    isSpeaking = false;
+    document.getElementById('sound-btn').classList.remove('playing');
+  };
+}
+
+function stopSound() {
+  speechSynthesis.cancel();
+  isSpeaking = false;
+  document.getElementById('sound-btn').classList.remove('playing');
+}
+
+function toggleFav(e) {
+  e.stopPropagation();
+  const c = current();
+  const i = favorites.findIndex(f => f.idiom === c.idiom);
+  if (i === -1) {
+    favorites.push({ ...c });
+    document.getElementById('fav-btn').textContent = '❤️';
+    document.getElementById('fav-btn').classList.add('active');
+  } else {
+    favorites.splice(i, 1);
+    document.getElementById('fav-btn').textContent = '🤍';
+    document.getElementById('fav-btn').classList.remove('active');
+  }
+  updateFavCount();
+  if (document.getElementById('fav-view').classList.contains('visible')) renderFavList();
+}
+
+function updateFavCount() {
+  document.getElementById('fav-count').textContent = favorites.length > 0 ? `(${favorites.length})` : '';
+}
+
+function renderFavList() {
+  const el = document.getElementById('fav-list-container');
+  if (!favorites.length) {
+    el.innerHTML = '<div class="fav-empty">まだお気に入りがありません。<br>❤️ ボタンで追加しましょう！</div>';
+    return;
+  }
+  el.innerHTML = `<div class="fav-list">${favorites.map((f, i) => `
+    <div class="fav-item">
+      <div class="fav-item-text">
+        <div class="fav-item-idiom">"${f.idiom}"</div>
+        <div class="fav-item-meaning">${f.meaning}</div>
+      </div>
+      <button class="fav-play" onclick="speak('${f.idiom.replace(/'/g, "\\'")}')">🔊</button>
+      <button class="fav-remove" onclick="removeFav(${i})">✕</button>
+    </div>`).join('')}
+  </div>`;
+}
+
+function removeFav(i) {
+  const removed = favorites[i];
+  favorites.splice(i, 1);
+  updateFavCount();
+  const c = current();
+  if (c && c.idiom === removed.idiom) {
+    document.getElementById('fav-btn').textContent = '🤍';
+    document.getElementById('fav-btn').classList.remove('active');
+  }
+  renderFavList();
+}
+
+function showTab(tab) {
+  const isCards = tab === 'cards';
+  document.getElementById('card-view').style.display = isCards ? '' : 'none';
+  document.getElementById('fav-view').classList.toggle('visible', !isCards);
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', isCards ? i === 0 : i === 1));
+  if (!isCards) renderFavList();
+}
+
+speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+speechSynthesis.getVoices();
+init();
+</script>
+</body>
+</html>

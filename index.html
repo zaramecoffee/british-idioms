@@ -7,7 +7,7 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap');
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-  body{min-height:100vh;background:#1a2e1a;background-image:radial-gradient(ellipse at top,#2d4a2d 0%,#1a2e1a 70%);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;font-family:'Lato',sans-serif;color:#f5e6c8;padding:16px;overflow:hidden;height:100vh;}
+  body{min-height:100vh;background:#1a2e1a;background-image:radial-gradient(ellipse at top,#2d4a2d 0%,#1a2e1a 70%);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;font-family:'Lato',sans-serif;color:#f5e6c8;padding:10px 16px;overflow-x:hidden;height:100vh;}
   h1{font-family:'Playfair Display',serif;font-size:1.4rem;letter-spacing:2px;color:#d4a843;margin-bottom:2px;text-align:center;}
   .subtitle{font-size:0.7rem;color:#8a9e8a;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;}
 
@@ -17,7 +17,7 @@
   .tab.active{background:#2d4a2d;color:#d4a843;}
 
   /* CARD STACK */
-  .stack{position:relative;width:min(340px,92vw);height:460px;margin-bottom:12px;}
+  .stack{position:relative;width:min(340px,92vw);height:min(420px,55vh);margin-bottom:10px;}
   .card{position:absolute;width:100%;height:100%;border-radius:18px;border:1px solid #3d5c3d;box-shadow:0 20px 60px rgba(0,0,0,0.5);background:linear-gradient(145deg,#243824,#1e321e);padding:28px 24px;display:flex;flex-direction:column;cursor:grab;user-select:none;transition:box-shadow 0.2s;will-change:transform;}
   .card.dragging{cursor:grabbing;box-shadow:0 30px 80px rgba(0,0,0,0.7);}
   .card.gone{display:none;}
@@ -46,7 +46,7 @@
   .hint-up{top:16px;left:50%;transform:translateX(-50%);color:#d4a843;border:1px solid #d4a843;background:rgba(212,168,67,0.15);}
 
   /* STORY PANEL */
-  .story-panel{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,#1e2d14,#162410);border-radius:18px 18px 18px 18px;border:1px solid #3d5c3d;padding:20px 22px;transform:translateY(100%);transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);max-height:75%;overflow-y:auto;z-index:10;}
+  .story-panel{position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(180deg,#1e2d14,#162410);border-radius:18px;border:1px solid #3d5c3d;padding:20px 22px;transform:translateY(100%);transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);overflow-y:auto;z-index:20;width:100%;}
   .story-panel.open{transform:translateY(0);}
   .story-panel::-webkit-scrollbar{width:3px;}
   .story-panel::-webkit-scrollbar-thumb{background:#3d5c3d;}
@@ -124,7 +124,7 @@
   <div class="controls">
     <button class="btn btn-icon" onclick="doLeft()" title="次へ">👈</button>
     <button class="btn btn-icon btn-sound" id="sound-btn" onclick="playSound()" title="音声">🔊</button>
-    <button class="btn btn-icon" onclick="doUp()" title="裏話">📖</button>
+    <button class="btn btn-icon" onclick="doUp(); return false;" title="裏話">📖</button>
     <button class="btn btn-icon" onclick="doRight()" title="お気に入り">❤️</button>
   </div>
   <div class="counter" id="counter"></div>
@@ -243,17 +243,22 @@ function setupDrag(card) {
     if (!dragCard) return;
     dragCard.classList.remove('dragging');
     dragCard.style.transition = 'transform 0.3s ease';
-    if (curX > 80) { doRight(); }
-    else if (curX < -80) { doLeft(); }
-    else if (curY < -80) { doUp(); }
+    const absX = Math.abs(curX), absY = Math.abs(curY);
+    if (absY > 80 && curY < 0 && absY > absX) {
+      // 上スワイプ：カードを元に戻してパネルを開く
+      dragCard.style.transform = `scale(1) translateY(0)`;
+      dragCard = null;
+      doUp();
+    } else if (curX > 80 && absX > absY) { doRight(); }
+    else if (curX < -80 && absX > absY) { doLeft(); }
     else { dragCard.style.transform = `scale(1) translateY(0)`; dragCard = null; }
   };
   card.addEventListener('mousedown', e => onStart(e.clientX, e.clientY));
-  window.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+  window.addEventListener('mousemove', e => { if(dragCard) onMove(e.clientX, e.clientY); });
   window.addEventListener('mouseup', onEnd);
-  card.addEventListener('touchstart', e => { e.preventDefault(); onStart(e.touches[0].clientX, e.touches[0].clientY); }, {passive:false});
-  card.addEventListener('touchmove', e => { e.preventDefault(); onMove(e.touches[0].clientX, e.touches[0].clientY); }, {passive:false});
-  card.addEventListener('touchend', onEnd);
+  card.addEventListener('touchstart', e => { onStart(e.touches[0].clientX, e.touches[0].clientY); }, {passive:true});
+  window.addEventListener('touchmove', e => { if(dragCard){ e.preventDefault(); onMove(e.touches[0].clientX, e.touches[0].clientY); } }, {passive:false});
+  window.addEventListener('touchend', onEnd, {passive:true});
 }
 
 function doRight() {
@@ -270,14 +275,18 @@ function doRight() {
 function doLeft() { dragCard = null; animateOut('left'); }
 
 function doUp() {
-  dragCard = null;
   const c = IDIOMS[cardIdx];
   document.getElementById('story-idiom').textContent = '"' + c.idiom + '"';
   document.getElementById('story-text').textContent = c.story;
-  document.getElementById('story-panel').classList.add('open');
+  const panel = document.getElementById('story-panel');
+  panel.style.display = 'block';
+  panel.classList.add('open');
 }
 
-function closeStory() { document.getElementById('story-panel').classList.remove('open'); }
+function closeStory() {
+  const panel = document.getElementById('story-panel');
+  panel.classList.remove('open');
+}
 
 function animateOut(dir) {
   const stack = document.getElementById('stack');

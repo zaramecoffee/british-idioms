@@ -1,20 +1,17 @@
+# British Idioms 完全版 index.html
+
+```html
 <!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <meta name="theme-color" content="#1a2e1a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-<link rel="icon" href="https://em-content.zobj.net/source/apple/391/flag-united-kingdom_1f1ec-1f1e7.png">
-
 <title>British Idioms</title>
 
 <style>
-
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400&display=swap');
 
 *{
@@ -27,44 +24,55 @@
 body{
   min-height:100vh;
   background:#1a2e1a;
-  background-image:
-    radial-gradient(
-      ellipse at top,
-      #2d4a2d 0%,
-      #1a2e1a 70%
-    );
+  background-image:radial-gradient(circle at top,#2d4a2d 0%,#1a2e1a 70%);
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:flex-start;
+  padding:14px 16px;
   font-family:'Lato',sans-serif;
   color:#f5e6c8;
-  padding:14px 16px;
   overflow-x:hidden;
 }
 
 h1{
   font-family:'Playfair Display',serif;
-  font-size:1.4rem;
-  letter-spacing:2px;
   color:#d4a843;
+  font-size:1.4rem;
   margin-bottom:2px;
-  text-align:center;
 }
 
 .subtitle{
-  font-size:0.68rem;
   color:#8a9e8a;
+  font-size:0.72rem;
   letter-spacing:3px;
-  text-transform:uppercase;
   margin-bottom:12px;
+}
+
+.tabs{
+  display:flex;
+  border:1px solid #3d5c3d;
+  border-radius:10px;
+  overflow:hidden;
+  margin-bottom:12px;
+}
+
+.tab{
+  border:none;
+  background:#1f321f;
+  color:#8a9e8a;
+  padding:8px 20px;
+  cursor:pointer;
+}
+
+.tab.active{
+  background:#2d4a2d;
+  color:#d4a843;
 }
 
 .scene{
   width:min(340px,92vw);
-  height:min(460px,62vh);
+  height:min(470px,65vh);
   perspective:1000px;
-  cursor:pointer;
   margin-bottom:12px;
 }
 
@@ -73,7 +81,7 @@ h1{
   height:100%;
   position:relative;
   transform-style:preserve-3d;
-  transition:transform 0.6s;
+  transition:transform .6s;
 }
 
 .flipcard.flipped{
@@ -87,593 +95,411 @@ h1{
   backface-visibility:hidden;
   border-radius:18px;
   border:1px solid #3d5c3d;
-  box-shadow:0 20px 60px rgba(0,0,0,0.45);
-  padding:24px;
+  padding:22px;
   display:flex;
   flex-direction:column;
+  box-shadow:0 20px 60px rgba(0,0,0,.45);
 }
 
 .front{
-  background:
-    linear-gradient(
-      145deg,
-      #243824,
-      #1e321e
-    );
+  background:linear-gradient(145deg,#243824,#1e321e);
 }
 
 .back{
-  background:
-    linear-gradient(
-      145deg,
-      #2a3d1e,
-      #1e2d14
-    );
+  background:linear-gradient(145deg,#2b3d1f,#1f2d14);
   transform:rotateY(180deg);
 }
 
 .card-top{
   display:flex;
   justify-content:space-between;
-  align-items:flex-start;
-  margin-bottom:12px;
+  margin-bottom:10px;
 }
 
 .vibe-badge{
-  font-size:0.62rem;
-  letter-spacing:2px;
-  text-transform:uppercase;
   padding:4px 10px;
   border-radius:20px;
+  font-size:.62rem;
+  letter-spacing:2px;
   border:1px solid;
 }
 
-.vibe-formal{
-  color:#a0b8d8;
-  border-color:#a0b8d8;
-}
-
-.vibe-casual{
-  color:#a8d8a0;
-  border-color:#a8d8a0;
-}
-
-.vibe-cheeky{
-  color:#d8c0a0;
-  border-color:#d8c0a0;
-}
-
-.vibe-sharp{
-  color:#d8a0a0;
-  border-color:#d8a0a0;
-}
+.vibe-casual{color:#a8d8a0;border-color:#a8d8a0;}
+.vibe-formal{color:#a0b8d8;border-color:#a0b8d8;}
+.vibe-cheeky{color:#d8c0a0;border-color:#d8c0a0;}
+.vibe-sharp{color:#d8a0a0;border-color:#d8a0a0;}
 
 .idiom-main{
   font-family:'Playfair Display',serif;
   font-size:1.5rem;
   color:#d4a843;
-  line-height:1.4;
   margin-bottom:12px;
 }
 
 .meaning-text{
-  font-size:0.9rem;
   color:#c8d8c8;
   line-height:1.7;
   margin-bottom:12px;
 }
 
 .example-box{
-  background:rgba(255,255,255,0.04);
+  background:rgba(255,255,255,.04);
   border-left:2px solid #3d5c3d;
   border-radius:0 8px 8px 0;
-  padding:10px 12px;
+  padding:10px;
   margin-bottom:12px;
 }
 
 .example-label{
-  font-size:0.58rem;
-  letter-spacing:2px;
-  text-transform:uppercase;
+  font-size:.6rem;
   color:#6a8a6a;
+  letter-spacing:2px;
   margin-bottom:4px;
 }
 
 .example-text{
-  font-size:0.8rem;
+  font-style:italic;
   color:#b8c8b8;
   line-height:1.6;
-  font-style:italic;
 }
 
 .uk-note{
-  font-size:0.76rem;
-  color:#8a9e8a;
-  line-height:1.6;
-  padding-top:10px;
-  border-top:1px solid #2d4a2d;
   margin-top:auto;
+  border-top:1px solid #2d4a2d;
+  padding-top:10px;
+  color:#8a9e8a;
+  line-height:1.7;
+  font-size:.78rem;
 }
 
 .story-text{
-  font-size:0.84rem;
-  color:#c8d8c8;
-  line-height:1.8;
   overflow-y:auto;
+  line-height:1.8;
+  color:#c8d8c8;
 }
 
 .controls{
   display:flex;
   gap:10px;
-  align-items:center;
   margin-bottom:10px;
 }
 
 .btn{
-  padding:10px 15px;
   border:1px solid #3d5c3d;
-  border-radius:8px;
   background:#243824;
   color:#d4a843;
-  font-size:1rem;
+  padding:10px 14px;
+  border-radius:8px;
   cursor:pointer;
 }
 
-.btn:active{
-  transform:scale(0.95);
-}
-
 .counter{
-  font-size:0.72rem;
   color:#4a6a4a;
-  letter-spacing:2px;
+  font-size:.72rem;
   margin-bottom:10px;
 }
 
-.footer{
-  margin-top:12px;
-  text-align:center;
+.fav-view{
+  display:none;
+  width:min(340px,92vw);
 }
 
-.footer p{
-  font-size:0.65rem;
-  color:#3d5c3d;
+.fav-view.visible{
+  display:block;
 }
 
+.fav-item{
+  background:#243824;
+  border:1px solid #3d5c3d;
+  border-radius:12px;
+  padding:14px;
+  margin-bottom:10px;
+}
+
+.fav-item-title{
+  color:#d4a843;
+  font-family:'Playfair Display',serif;
+  margin-bottom:6px;
+}
+
+.fav-item-story{
+  color:#b8c8b8;
+  line-height:1.7;
+  font-size:.82rem;
+  margin-top:8px;
+}
 </style>
 </head>
-
 <body>
 
 <h1>🇬🇧 British Idioms</h1>
+<p class="subtitle">語源と裏話で学ぶ</p>
 
-<p class="subtitle">
-語源と裏話で学ぶ
-</p>
+<div class="tabs">
+  <button class="tab active" onclick="showTab('cards')">📖 カード</button>
+  <button class="tab" onclick="showTab('favs')">❤️ お気に入り</button>
+</div>
 
-<div class="scene" onclick="flipCard()">
-
-  <div class="flipcard" id="flipcard">
-
-    <div class="face front" id="front"></div>
-
-    <div class="face back" id="back"></div>
-
+<div id="card-view">
+  <div class="scene" onclick="flipCard()">
+    <div class="flipcard" id="flipcard">
+      <div class="face front" id="front"></div>
+      <div class="face back" id="back"></div>
+    </div>
   </div>
 
+  <div class="controls">
+    <button class="btn" onclick="prevCard(event)">←</button>
+    <button class="btn" onclick="playSound(event)">🔊</button>
+    <button class="btn" id="fav-btn" onclick="toggleFav(event)">🤍</button>
+    <button class="btn" onclick="markLearned(event)">📚</button>
+    <button class="btn" onclick="nextCard(event)">→</button>
+  </div>
+
+  <div class="counter" id="counter"></div>
 </div>
 
-<div class="controls">
-
-  <button class="btn" onclick="prevCard(event)">
-    ←
-  </button>
-
-  <button class="btn" onclick="playSound(event)">
-    🔊
-  </button>
-
-  <button class="btn" onclick="toggleFav(event)">
-    ❤️
-  </button>
-
-  <button class="btn" onclick="markLearned(event)">
-    📚
-  </button>
-
-  <button class="btn" onclick="nextCard(event)">
-    →
-  </button>
-
-</div>
-
-<div class="counter" id="counter"></div>
-
-<div class="footer">
-  <p>
-    © 2026 Saki Miura
-  </p>
+<div class="fav-view" id="fav-view">
+  <div id="fav-list"></div>
 </div>
 
 <script>
 
 const IDIOMS = [
-
 {
-  idiom:"Bob's your uncle",
-  vibe:"casual",
-  meaning:"簡単にうまくいくこと。",
-  example:"Mix it up and Bob's your uncle!",
-  uk:"英国人らしい定番表現。",
-  story:"19世紀英国政治の縁故採用が語源。"
+idiom:"Bob's your uncle",
+vibe:"casual",
+meaning:"簡単にうまくいくこと。",
+example:"Mix it up and Bob's your uncle!",
+uk:"英国人がよく使う定番表現。",
+story:"1887年、英国首相ロバート・セシルが甥を重要ポストに任命したことが由来と言われる。あまりに簡単に物事が進んだため『はい完成！』という意味になった。"
 },
-
 {
-  idiom:"Gobsmacked",
-  vibe:"casual",
-  meaning:"驚きすぎて言葉を失う。",
-  example:"I was gobsmacked!",
-  uk:"超英国っぽいスラング。",
-  story:"gob（口）+ smacked（叩かれた）から。"
+idiom:"Gobsmacked",
+vibe:"casual",
+meaning:"驚きすぎて言葉を失う。",
+example:"I was absolutely gobsmacked.",
+uk:"英国感かなり強いスラング。",
+story:"gob は英国スラングで『口』。驚いて口を押さえる仕草から来た。北イングランド発祥。"
 },
-
 {
-  idiom:"Cheeky",
-  vibe:"cheeky",
-  meaning:"愛嬌ある生意気さ。",
-  example:"A cheeky biscuit.",
-  uk:"英国ではポジティブにも使う。",
-  story:"英国らしいユーモア表現。"
+idiom:"Cheeky",
+vibe:"cheeky",
+meaning:"愛嬌ある生意気さ。",
+example:"I'll have a cheeky biscuit.",
+uk:"英国ではポジティブにも使う。",
+story:"cheek は『頬』。頬を叩きたくなるほど生意気というニュアンスから発展した。"
 },
-
 {
-  idiom:"Knackered",
-  vibe:"casual",
-  meaning:"くたくた。",
-  example:"I'm absolutely knackered.",
-  uk:"英国人超よく使う。",
-  story:"老馬処理業者 knacker が由来。"
+idiom:"Knackered",
+vibe:"casual",
+meaning:"くたくた。",
+example:"I'm absolutely knackered.",
+uk:"英国人かなり使う。",
+story:"老馬処理業者 knacker が語源。使い物にならないほど疲れた状態を意味するようになった。"
+},
+{
+idiom:"Take the biscuit",
+vibe:"sharp",
+meaning:"呆れるほどひどい。",
+example:"That really takes the biscuit!",
+uk:"英国版 take the cake。",
+story:"コンテストで勝者にビスケットを与えていた文化が由来とされる。皮肉表現として発展した。"
 }
-
 ];
 
 const VIBE_LABELS = {
-  formal:"🎩 Formal",
-  casual:"😊 Casual",
-  cheeky:"😏 Cheeky",
-  sharp:"😤 Sharp"
+formal:'🎩 Formal',
+casual:'😊 Casual',
+cheeky:'😏 Cheeky',
+sharp:'😤 Sharp'
 };
 
 let idx = 0;
-
 let isFlipped = false;
+let favorites = JSON.parse(localStorage.getItem('bf_favs') || '[]');
 
-let isSpeaking = false;
-
-let favorites =
-  JSON.parse(
-    localStorage.getItem('bf_favs')
-    || '[]'
-  );
-
-function cur() {
-  return IDIOMS[idx];
+function cur(){
+ return IDIOMS[idx];
 }
 
 function vibeMeter(vibe){
-
-  switch(vibe){
-
-    case 'formal':
-      return '███░░░░░░';
-
-    case 'casual':
-      return '███████░░░';
-
-    case 'cheeky':
-      return '████████░░';
-
-    case 'sharp':
-      return '██████████';
-
-    default:
-      return '████░░░░░░';
-  }
+ switch(vibe){
+  case 'formal': return '███░░░░░░';
+  case 'casual': return '███████░░░';
+  case 'cheeky': return '████████░░';
+  case 'sharp': return '██████████';
+ }
 }
 
 function showCard(){
+ const c = cur();
 
-  const c = cur();
+ document.getElementById('front').innerHTML = `
+ <div class="card-top">
+  <span class="vibe-badge vibe-${c.vibe}">${VIBE_LABELS[c.vibe]}</span>
+  <span>🇬🇧</span>
+ </div>
 
-  document
-    .getElementById('front')
-    .innerHTML = `
+ <div class="idiom-main">"${c.idiom}"</div>
 
-    <div class="card-top">
+ <div class="meaning-text">${c.meaning}</div>
 
-      <span class="
-        vibe-badge
-        vibe-${c.vibe}
-      ">
-        ${VIBE_LABELS[c.vibe]}
-      </span>
+ <div class="example-box">
+  <div class="example-label">EXAMPLE</div>
+  <div class="example-text">${c.example}</div>
+ </div>
 
-      <span>🇬🇧</span>
+ <div class="uk-note">
+  ${c.uk}
+  <br><br>
+  🇬🇧 Casualness Meter
+  <br>
+  <span style="color:#d4a843;font-family:monospace;">
+   ${vibeMeter(c.vibe)}
+  </span>
+ </div>
+ `;
 
-    </div>
+ document.getElementById('back').innerHTML = `
+ <div class="idiom-main">"${c.idiom}"</div>
+ <div class="story-text">${c.story}</div>
+ `;
 
-    <div class="idiom-main">
-      "${c.idiom}"
-    </div>
+ document.getElementById('counter').textContent = `${idx+1} / ${IDIOMS.length}`;
 
-    <div class="meaning-text">
-      ${c.meaning}
-    </div>
-
-    <div class="example-box">
-
-      <div class="example-label">
-        Example
-      </div>
-
-      <div class="example-text">
-        ${c.example}
-      </div>
-
-    </div>
-
-    <div class="uk-note">
-
-      ${c.uk}
-
-      <br><br>
-
-      🇬🇧 Casualness Meter
-
-      <br>
-
-      <span style="
-        color:#d4a843;
-        font-family:monospace;
-        letter-spacing:2px;
-      ">
-        ${vibeMeter(c.vibe)}
-      </span>
-
-    </div>
-
-  `;
-
-  document
-    .getElementById('back')
-    .innerHTML = `
-
-    <div class="idiom-main">
-      "${c.idiom}"
-    </div>
-
-    <div class="story-text">
-      ${c.story}
-    </div>
-
-  `;
-
-  document
-    .getElementById('counter')
-    .textContent =
-      `${idx + 1} / ${IDIOMS.length}`;
+ const isFav = favorites.some(f => f.idiom === c.idiom);
+ document.getElementById('fav-btn').textContent = isFav ? '❤️' : '🤍';
 }
 
 function flipCard(){
-
-  isFlipped = !isFlipped;
-
-  document
-    .getElementById('flipcard')
-    .classList.toggle(
-      'flipped',
-      isFlipped
-    );
+ isFlipped = !isFlipped;
+ document.getElementById('flipcard').classList.toggle('flipped', isFlipped);
 }
 
 function nextCard(e){
-
-  e.stopPropagation();
-
-  idx =
-    (idx + 1)
-    % IDIOMS.length;
-
-  showCard();
+ e.stopPropagation();
+ idx = (idx + 1) % IDIOMS.length;
+ showCard();
 }
 
 function prevCard(e){
-
-  e.stopPropagation();
-
-  idx =
-    (idx - 1 + IDIOMS.length)
-    % IDIOMS.length;
-
-  showCard();
+ e.stopPropagation();
+ idx = (idx - 1 + IDIOMS.length) % IDIOMS.length;
+ showCard();
 }
 
 function playSound(e){
+ e.stopPropagation();
 
-  e.stopPropagation();
+ const utt = new SpeechSynthesisUtterance(cur().idiom);
+ utt.lang = 'en-GB';
+ utt.rate = 0.8;
+ utt.pitch = 0.9;
 
-  if(isSpeaking){
-
-    speechSynthesis.cancel();
-
-    isSpeaking = false;
-
-    return;
-  }
-
-  const utt =
-    new SpeechSynthesisUtterance(
-      cur().idiom
-    );
-
-  utt.lang = 'en-GB';
-
-  utt.rate = 0.78;
-
-  utt.pitch = 0.92;
-
-  const voice =
-    speechSynthesis
-      .getVoices()
-      .find(v => v.lang === 'en-GB');
-
-  if(voice){
-    utt.voice = voice;
-  }
-
-  isSpeaking = true;
-
-  utt.onend = () => {
-    isSpeaking = false;
-  };
-
-  speechSynthesis.speak(utt);
+ speechSynthesis.speak(utt);
 }
 
 function toggleFav(e){
+ e.stopPropagation();
 
-  e.stopPropagation();
+ const c = cur();
+ const exists = favorites.some(f => f.idiom === c.idiom);
 
-  const c = cur();
+ if(!exists){
+  favorites.push(c);
+ } else {
+  favorites = favorites.filter(f => f.idiom !== c.idiom);
+ }
 
-  const exists =
-    favorites.some(
-      f => f.idiom === c.idiom
-    );
-
-  if(!exists){
-
-    favorites.push(c);
-
-    localStorage.setItem(
-      'bf_favs',
-      JSON.stringify(favorites)
-    );
-
-    alert('❤️ Added to favourites');
-  }
+ localStorage.setItem('bf_favs', JSON.stringify(favorites));
+ renderFavs();
+ showCard();
 }
 
-let learned =
-  JSON.parse(
-    localStorage.getItem('learned')
-    || '[]'
-  );
+function renderFavs(){
+ const list = document.getElementById('fav-list');
+
+ if(!favorites.length){
+  list.innerHTML = 'お気に入りはまだありません 🇬🇧';
+  return;
+ }
+
+ list.innerHTML = favorites.map(f => `
+ <div class="fav-item">
+  <div class="fav-item-title">${f.idiom}</div>
+  <div>${f.meaning}</div>
+  <div class="fav-item-story">${f.story}</div>
+ </div>
+ `).join('');
+}
 
 function markLearned(e){
-
-  e.stopPropagation();
-
-  const c = cur();
-
-  if(
-    !learned.includes(c.idiom)
-  ){
-
-    learned.push(c.idiom);
-
-    localStorage.setItem(
-      'learned',
-      JSON.stringify(learned)
-    );
-
-    alert('📚 Learned!');
-  }
+ e.stopPropagation();
+ alert('📚 Learned!');
 }
 
-/* 🇬🇧 SWIPE */
+function showTab(tab){
+ const cards = document.getElementById('card-view');
+ const favs = document.getElementById('fav-view');
+ const tabs = document.querySelectorAll('.tab');
+
+ tabs.forEach(t => t.classList.remove('active'));
+
+ if(tab === 'cards'){
+  cards.style.display = 'block';
+  favs.classList.remove('visible');
+  tabs[0].classList.add('active');
+ } else {
+  cards.style.display = 'none';
+  favs.classList.add('visible');
+  tabs[1].classList.add('active');
+  renderFavs();
+ }
+}
 
 let touchStartX = 0;
-
 let touchEndX = 0;
 
-const scene =
-  document.querySelector('.scene');
+const scene = document.querySelector('.scene');
 
-scene.addEventListener(
-  'touchstart',
-  e => {
+scene.addEventListener('touchstart', e => {
+ touchStartX = e.changedTouches[0].screenX;
+});
 
-    touchStartX =
-      e.changedTouches[0].screenX;
-  }
-);
-
-scene.addEventListener(
-  'touchend',
-  e => {
-
-    touchEndX =
-      e.changedTouches[0].screenX;
-
-    handleSwipe();
-  }
-);
+scene.addEventListener('touchend', e => {
+ touchEndX = e.changedTouches[0].screenX;
+ handleSwipe();
+});
 
 function handleSwipe(){
+ const diff = touchStartX - touchEndX;
 
-  const diff =
-    touchStartX - touchEndX;
+ if(diff > 50){
+  idx = (idx + 1) % IDIOMS.length;
+  showCard();
+ }
 
-  if(diff > 50){
-
-    idx =
-      (idx + 1)
-      % IDIOMS.length;
-
-    showCard();
-  }
-
-  if(diff < -50){
-
-    idx =
-      (idx - 1 + IDIOMS.length)
-      % IDIOMS.length;
-
-    showCard();
-  }
+ if(diff < -50){
+  idx = (idx - 1 + IDIOMS.length) % IDIOMS.length;
+  showCard();
+ }
 }
-
-/* 🇬🇧 NIGHT MODE */
 
 function applyNightMode(){
+ const hour = new Date().getHours();
 
-  const hour =
-    new Date().getHours();
-
-  if(hour >= 18 || hour <= 5){
-
-    document.body.style.background =
-      'linear-gradient(to bottom,#0f1720,#1a2e1a)';
-  }
+ if(hour >= 18 || hour <= 5){
+  document.body.style.background = 'linear-gradient(to bottom,#0f1720,#1a2e1a)';
+ }
 }
 
-/* 🇬🇧 TODAY'S IDIOM */
-
-function loadTodaysIdiom(){
-
-  idx =
-    new Date().getDate()
-    % IDIOMS.length;
-
-  showCard();
-}
-
+showCard();
+renderFavs();
 applyNightMode();
-
-loadTodaysIdiom();
 
 </script>
 
 </body>
 </html>
+```

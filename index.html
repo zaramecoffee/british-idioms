@@ -6,74 +6,94 @@
 <title>British Idioms</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap');
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    min-height: 100vh;
-    background: #1a2e1a;
-    background-image: radial-gradient(ellipse at top, #2d4a2d 0%, #1a2e1a 70%);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    font-family: 'Lato', sans-serif; color: #f5e6c8; padding: 20px;
-  }
-  h1 { font-family: 'Playfair Display', serif; font-size: 1.6rem; letter-spacing: 2px; color: #d4a843; margin-bottom: 6px; text-align: center; }
-  .subtitle { font-size: 0.8rem; color: #8a9e8a; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 24px; }
-  .tabs { display: flex; margin-bottom: 20px; border: 1px solid #3d5c3d; border-radius: 8px; overflow: hidden; }
-  .tab { padding: 8px 22px; font-size: 0.8rem; letter-spacing: 1px; cursor: pointer; background: #1e321e; color: #6a8a6a; border: none; transition: all 0.2s; font-family: 'Lato', sans-serif; }
-  .tab.active { background: #2d4a2d; color: #d4a843; }
-  .scene { width: 360px; height: 460px; perspective: 1000px; cursor: pointer; }
-  .card { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.7s cubic-bezier(0.4,0,0.2,1); }
-  .card.flipped { transform: rotateY(180deg); }
-  .face {
-    position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
-    border-radius: 16px; padding: 32px 28px; display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    border: 1px solid #3d5c3d;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(212,168,67,0.2);
-  }
-  .front { background: linear-gradient(145deg, #243824, #1e321e); }
-  .back { background: linear-gradient(145deg, #2a3d1e, #1e2d14); transform: rotateY(180deg); justify-content: flex-start; padding-top: 24px; }
-  .crown { font-size: 2rem; margin-bottom: 14px; }
-  .idiom { font-family: 'Playfair Display', serif; font-size: 1.45rem; color: #d4a843; text-align: center; line-height: 1.4; margin-bottom: 18px; }
-  .label { font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; color: #6a8a6a; margin-bottom: 8px; }
-  .meaning { font-size: 0.95rem; color: #c8d8c8; text-align: center; line-height: 1.6; }
-  .hint { margin-top: 24px; font-size: 0.72rem; color: #4a6a4a; letter-spacing: 1px; }
-  .back-idiom { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: #d4a843; text-align: center; margin-bottom: 16px; font-style: italic; }
-  .story-label { font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; color: #6a8a6a; margin-bottom: 10px; align-self: flex-start; }
-  .story { font-size: 0.85rem; color: #c8d8c8; line-height: 1.75; overflow-y: auto; flex: 1; width: 100%; }
-  .story::-webkit-scrollbar { width: 3px; }
-  .story::-webkit-scrollbar-thumb { background: #3d5c3d; border-radius: 2px; }
-  .controls { display: flex; gap: 10px; margin-top: 20px; align-items: center; }
-  .btn { padding: 11px 20px; border: 1px solid #3d5c3d; border-radius: 8px; background: #243824; color: #d4a843; font-family: 'Lato', sans-serif; font-size: 0.85rem; letter-spacing: 1px; cursor: pointer; transition: all 0.2s; }
-  .btn:hover { background: #2d4a2d; border-color: #d4a843; }
-  .btn:active { transform: scale(0.97); }
-  .btn-icon { padding: 11px 13px; font-size: 1.1rem; }
-  .btn-fav.active { color: #e8a0a0; border-color: #c06060; background: #2d1e1e; }
-  .btn-sound.playing { border-color: #d4a843; background: #2d4a1a; }
-  .counter { font-size: 0.75rem; color: #4a6a4a; letter-spacing: 2px; margin-top: 12px; }
-  .progress { display: flex; gap: 3px; margin-top: 10px; flex-wrap: wrap; justify-content: center; max-width: 360px; }
-  .pip { width: 8px; height: 8px; border-radius: 50%; background: #2d4a2d; border: 1px solid #3d5c3d; transition: background 0.3s; }
-  .pip.seen { background: #4a6a4a; }
-  .pip.current { background: #d4a843; }
-  .fav-view { display: none; width: 360px; }
-  .fav-view.visible { display: block; }
-  .fav-empty { text-align: center; color: #4a6a4a; font-style: italic; font-family: 'Playfair Display', serif; padding: 40px 0; }
-  .fav-list { display: flex; flex-direction: column; gap: 10px; max-height: 460px; overflow-y: auto; }
-  .fav-list::-webkit-scrollbar { width: 3px; }
-  .fav-list::-webkit-scrollbar-thumb { background: #3d5c3d; border-radius: 2px; }
-  .fav-item { background: linear-gradient(145deg, #243824, #1e321e); border: 1px solid #3d5c3d; border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; gap: 10px; transition: border-color 0.2s; }
-  .fav-item { flex-direction: column; align-items: flex-start; }
-  .fav-item:hover { border-color: #d4a843; }
-  .fav-item-header { display: flex; width: 100%; align-items: center; gap: 10px; }
-  .fav-item-text { flex: 1; }
-  .fav-item-idiom { font-family: 'Playfair Display', serif; color: #d4a843; font-size: 0.92rem; margin-bottom: 3px; }
-  .fav-item-meaning { font-size: 0.76rem; color: #8a9e8a; }
-  .fav-item-story { font-size: 0.78rem; color: #c8d8c8; line-height: 1.7; margin-top: 10px; padding-top: 10px; border-top: 1px solid #2d4a2d; display: none; }
-  .fav-item-story.open { display: block; }
-  .fav-toggle { background: none; border: none; color: #6a8a6a; font-size: 0.75rem; cursor: pointer; letter-spacing: 1px; padding: 4px; transition: color 0.2s; white-space: nowrap; }
-  .fav-toggle:hover { color: #d4a843; }
-  .fav-remove { background: none; border: none; color: #c06060; font-size: 1rem; cursor: pointer; opacity: 0.6; transition: opacity 0.2s; padding: 4px; }
-  .fav-remove:hover { opacity: 1; }
-  .fav-play { background: none; border: none; color: #d4a843; font-size: 1rem; cursor: pointer; opacity: 0.6; transition: opacity 0.2s; padding: 4px; }
-  .fav-play:hover { opacity: 1; }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{min-height:100vh;background:#1a2e1a;background-image:radial-gradient(ellipse at top,#2d4a2d 0%,#1a2e1a 70%);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;font-family:'Lato',sans-serif;color:#f5e6c8;padding:16px;overflow:hidden;height:100vh;}
+  h1{font-family:'Playfair Display',serif;font-size:1.4rem;letter-spacing:2px;color:#d4a843;margin-bottom:2px;text-align:center;}
+  .subtitle{font-size:0.7rem;color:#8a9e8a;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;}
+
+  /* TABS */
+  .tabs{display:flex;margin-bottom:12px;border:1px solid #3d5c3d;border-radius:8px;overflow:hidden;}
+  .tab{padding:7px 20px;font-size:0.78rem;letter-spacing:1px;cursor:pointer;background:#1e321e;color:#6a8a6a;border:none;transition:all 0.2s;font-family:'Lato',sans-serif;}
+  .tab.active{background:#2d4a2d;color:#d4a843;}
+
+  /* CARD STACK */
+  .stack{position:relative;width:min(340px,92vw);height:460px;margin-bottom:12px;}
+  .card{position:absolute;width:100%;height:100%;border-radius:18px;border:1px solid #3d5c3d;box-shadow:0 20px 60px rgba(0,0,0,0.5);background:linear-gradient(145deg,#243824,#1e321e);padding:28px 24px;display:flex;flex-direction:column;cursor:grab;user-select:none;transition:box-shadow 0.2s;will-change:transform;}
+  .card.dragging{cursor:grabbing;box-shadow:0 30px 80px rgba(0,0,0,0.7);}
+  .card.gone{display:none;}
+
+  /* CARD CONTENT - FRONT */
+  .card-front{display:flex;flex-direction:column;height:100%;}
+  .card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;}
+  .vibe-badge{font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;border-radius:20px;border:1px solid;}
+  .vibe-formal{color:#a0b8d8;border-color:#a0b8d8;background:rgba(160,184,216,0.1);}
+  .vibe-casual{color:#a8d8a0;border-color:#a8d8a0;background:rgba(168,216,160,0.1);}
+  .vibe-cheeky{color:#d8c0a0;border-color:#d8c0a0;background:rgba(216,192,160,0.1);}
+  .vibe-sharp{color:#d8a0a0;border-color:#d8a0a0;background:rgba(216,160,160,0.1);}
+  .uk-badge{font-size:0.75rem;}
+  .idiom-main{font-family:'Playfair Display',serif;font-size:1.5rem;color:#d4a843;line-height:1.35;margin-bottom:8px;flex:0 0 auto;}
+  .meaning-text{font-size:0.88rem;color:#c8d8c8;line-height:1.6;margin-bottom:12px;}
+  .example-box{background:rgba(255,255,255,0.04);border-left:2px solid #3d5c3d;border-radius:0 8px 8px 0;padding:10px 12px;margin-bottom:12px;flex:0 0 auto;}
+  .example-label{font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:#6a8a6a;margin-bottom:4px;}
+  .example-text{font-size:0.82rem;color:#b8c8b8;line-height:1.5;font-style:italic;}
+  .uk-note{font-size:0.78rem;color:#8a9e8a;line-height:1.5;padding:8px 0;border-top:1px solid #2d4a2d;margin-top:auto;}
+  .uk-note-label{font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:#6a8a6a;margin-bottom:3px;}
+
+  /* SWIPE HINTS */
+  .swipe-hint{position:absolute;top:50%;transform:translateY(-50%);font-size:0.7rem;letter-spacing:1px;opacity:0;transition:opacity 0.15s;pointer-events:none;padding:6px 12px;border-radius:20px;font-weight:bold;}
+  .hint-right{right:16px;color:#6abf6a;border:1px solid #6abf6a;background:rgba(106,191,106,0.15);}
+  .hint-left{left:16px;color:#bf6a6a;border:1px solid #bf6a6a;background:rgba(191,106,106,0.15);}
+  .hint-up{top:16px;left:50%;transform:translateX(-50%);color:#d4a843;border:1px solid #d4a843;background:rgba(212,168,67,0.15);}
+
+  /* STORY PANEL */
+  .story-panel{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,#1e2d14,#162410);border-radius:18px 18px 18px 18px;border:1px solid #3d5c3d;padding:20px 22px;transform:translateY(100%);transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);max-height:75%;overflow-y:auto;z-index:10;}
+  .story-panel.open{transform:translateY(0);}
+  .story-panel::-webkit-scrollbar{width:3px;}
+  .story-panel::-webkit-scrollbar-thumb{background:#3d5c3d;}
+  .story-panel-label{font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:#6a8a6a;margin-bottom:8px;}
+  .story-panel-idiom{font-family:'Playfair Display',serif;color:#d4a843;font-size:1rem;font-style:italic;margin-bottom:12px;}
+  .story-text{font-size:0.85rem;color:#c8d8c8;line-height:1.75;}
+  .story-close{position:absolute;top:12px;right:14px;background:none;border:none;color:#6a8a6a;font-size:1.2rem;cursor:pointer;}
+
+  /* GESTURE GUIDE */
+  .gesture-guide{display:flex;gap:16px;margin-bottom:10px;}
+  .gesture{display:flex;align-items:center;gap:5px;font-size:0.68rem;color:#4a6a4a;}
+
+  /* CONTROLS */
+  .controls{display:flex;gap:10px;align-items:center;}
+  .btn{padding:10px 18px;border:1px solid #3d5c3d;border-radius:8px;background:#243824;color:#d4a843;font-family:'Lato',sans-serif;font-size:0.82rem;letter-spacing:1px;cursor:pointer;transition:all 0.2s;}
+  .btn:hover{background:#2d4a2d;border-color:#d4a843;}
+  .btn:active{transform:scale(0.97);}
+  .btn-icon{padding:10px 13px;font-size:1.05rem;}
+  .btn-sound.playing{border-color:#d4a843;background:#2d4a1a;}
+  .counter{font-size:0.72rem;color:#4a6a4a;letter-spacing:2px;margin-top:8px;}
+
+  /* FAVORITES */
+  .fav-view{display:none;width:min(340px,92vw);}
+  .fav-view.visible{display:block;}
+  .fav-empty{text-align:center;color:#4a6a4a;font-style:italic;font-family:'Playfair Display',serif;padding:40px 0;}
+  .fav-list{display:flex;flex-direction:column;gap:10px;max-height:500px;overflow-y:auto;}
+  .fav-list::-webkit-scrollbar{width:3px;}
+  .fav-list::-webkit-scrollbar-thumb{background:#3d5c3d;border-radius:2px;}
+  .fav-item{background:linear-gradient(145deg,#243824,#1e321e);border:1px solid #3d5c3d;border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;transition:border-color 0.2s;}
+  .fav-item:hover{border-color:#d4a843;}
+  .fav-item-header{display:flex;width:100%;align-items:center;gap:8px;}
+  .fav-item-text{flex:1;}
+  .fav-item-idiom{font-family:'Playfair Display',serif;color:#d4a843;font-size:0.9rem;margin-bottom:3px;}
+  .fav-item-meaning{font-size:0.74rem;color:#8a9e8a;}
+  .fav-item-story{font-size:0.76rem;color:#c8d8c8;line-height:1.7;padding-top:8px;border-top:1px solid #2d4a2d;display:none;}
+  .fav-item-story.open{display:block;}
+  .fav-toggle,.fav-remove,.fav-play{background:none;border:none;cursor:pointer;padding:4px;opacity:0.6;transition:opacity 0.2s;}
+  .fav-toggle{color:#6a8a6a;font-size:0.72rem;letter-spacing:1px;}
+  .fav-remove{color:#c06060;font-size:1rem;}
+  .fav-play{color:#d4a843;font-size:1rem;}
+  .fav-toggle:hover,.fav-remove:hover,.fav-play:hover{opacity:1;}
+
+  /* FOOTER */
+  .footer{margin-top:12px;display:flex;flex-direction:column;align-items:center;gap:6px;}
+  .footer a{display:inline-block;padding:7px 16px;border:1px solid #3d5c3d;border-radius:8px;background:#1e321e;color:#8a9e8a;font-size:0.72rem;letter-spacing:1px;text-decoration:none;transition:all 0.2s;}
+  .footer a:hover{border-color:#d4a843;color:#d4a843;}
+  .footer p{font-size:0.65rem;color:#3d5c3d;letter-spacing:1px;}
 </style>
 </head>
 <body>
@@ -82,217 +102,212 @@
 
 <div class="tabs">
   <button class="tab active" onclick="showTab('cards')">📖 カード</button>
-  <button class="tab" onclick="showTab('favs')" id="fav-tab">⭐ お気に入り <span id="fav-count"></span></button>
+  <button class="tab" onclick="showTab('favs')">⭐ お気に入り <span id="fav-count"></span></button>
 </div>
 
+<!-- CARD VIEW -->
 <div id="card-view">
-  <div class="scene" onclick="flipCard()">
-    <div class="card" id="card">
-      <div class="face front">
-        <div class="crown">👑</div>
-        <div id="front-content"></div>
-      </div>
-      <div class="face back">
-        <div id="back-content" style="width:100%;display:flex;flex-direction:column;height:100%"></div>
-      </div>
+  <div class="gesture-guide">
+    <div class="gesture">👉 右スワイプ → ⭐</div>
+    <div class="gesture">👈 左スワイプ → 次へ</div>
+    <div class="gesture">👆 上スワイプ → 裏話</div>
+  </div>
+  <div class="stack" id="stack">
+    <!-- cards injected here -->
+    <div class="story-panel" id="story-panel">
+      <button class="story-close" onclick="closeStory()">✕</button>
+      <div class="story-panel-label">📜 語源・文化背景</div>
+      <div class="story-panel-idiom" id="story-idiom"></div>
+      <div class="story-text" id="story-text"></div>
     </div>
   </div>
   <div class="controls">
-    <button class="btn btn-icon btn-fav" id="fav-btn" onclick="toggleFav(event)" title="お気に入り">🤍</button>
-    <button class="btn btn-icon btn-sound" id="sound-btn" onclick="playSound(event)" title="音声再生">🔊</button>
-    <button class="btn" onclick="prevCard()">← 前</button>
-    <button class="btn" onclick="nextCard()">次 →</button>
+    <button class="btn btn-icon" onclick="doLeft()" title="次へ">👈</button>
+    <button class="btn btn-icon btn-sound" id="sound-btn" onclick="playSound()" title="音声">🔊</button>
+    <button class="btn btn-icon" onclick="doUp()" title="裏話">📖</button>
+    <button class="btn btn-icon" onclick="doRight()" title="お気に入り">❤️</button>
   </div>
   <div class="counter" id="counter"></div>
-  <div class="progress" id="progress"></div>
 </div>
 
+<!-- FAV VIEW -->
 <div class="fav-view" id="fav-view">
   <div id="fav-list-container"></div>
 </div>
 
+<div class="footer">
+  <a href="https://forms.gle/nsEHWgy7p5ZuvZBN7" target="_blank">📩 お問い合わせ</a>
+  <p>© 2026 Saki Miura — All rights reserved</p>
+</div>
+
 <script>
 const IDIOMS = [
-  { idiom: "Bob's your uncle", meaning: "「あっという間に完了！」という意味。何かを簡単に達成できることを表す。", story: "1887年、英国首相ロバート・セシルが甥のアーサー・バルフォアを要職に任命したことが由来とされる。縁故採用があまりにもあっけなく行われたことから、「はい、できあがり！」という意味が生まれた。当時の英国社会での縁故主義を皮肉った表現でもある。" },
-  { idiom: "Bite the bullet", meaning: "「歯を食いしばって耐える」という意味。苦しいことを我慢して乗り越えること。", story: "19世紀の戦場で、麻酔なしに手術を行う際、兵士に銃弾を噛ませて痛みに耐えさせたことが由来。ラッドヤード・キップリングの小説にも登場し、広く知られるようになった。現代では困難な決断を下す場面でよく使われる。" },
-  { idiom: "Raining cats and dogs", meaning: "「土砂降り」という意味。激しい雨が降っている状態を表す。", story: "17世紀のロンドンでは排水設備が整っておらず、大雨のたびに路上の死んだ動物が流されてきた。詩人ジョナサン・スウィフトが1710年の詩でこの表現を使ったのが最初の記録とされる。当時の街の惨状が今も慣用句として生き残っている。" },
-  { idiom: "Break a leg", meaning: "「頑張って！」「うまくいくといいね！」という意味の励ましの言葉。", story: "演劇界の迷信から生まれた表現。舞台で「グッドラック」と言うと逆に不運を招くと信じられていたため、反対のことを言うようになった。膝を深く曲げてお辞儀すること（break the leg line）が成功の証だったという説もある。" },
-  { idiom: "Kick the bucket", meaning: "「死ぬ」という意味の婉曲表現。", story: "中世の絞首刑で、罪人が乗る桶（bucket）を蹴って処刑が行われたことが由来とされる。また、豚を屠殺する際に使われた木製の桶を指すという説もある。いずれにせよ16世紀ごろから使われている歴史ある表現だ。" },
-  { idiom: "The bee's knees", meaning: "「最高のもの」「一流のもの」という意味。", story: "1920年代のアメリカ発祥だが英国でも広く使われるようになった。禁酒法時代のジャズ文化の中で生まれたスラング。ミツバチの膝は非常に小さく精巧であることから「精巧で素晴らしいもの」を指すようになったとされる。" },
-  { idiom: "Costs an arm and a leg", meaning: "「非常に高額」という意味。法外な値段がすることを表す。", story: "18〜19世紀、肖像画の値段は描く体の部位の数で決まっていたという説がある。全身像は顔だけより何倍も高かった。また戦争で手足を失う犠牲と結びつける説もある。いずれも「大きな代償」というイメージから来ている。" },
-  { idiom: "Barking up the wrong tree", meaning: "「見当違いのことをする」「的外れな努力をする」という意味。", story: "狩猟犬が獲物を木に追い込んだと思って吠え続けるが、実は獲物はすでに逃げていたという狩猟シーンから生まれた。19世紀のアメリカ文学に初出が見られ、英国にも渡って定着した。努力の方向を間違える様子を巧みに表している。" },
-  { idiom: "Let the cat out of the bag", meaning: "「秘密を漏らす」という意味。意図せず秘密を明かしてしまうこと。", story: "中世の市場で、豚の代わりに猫を袋に入れて売る詐欺が横行していた。買い手が袋を開けると猫が飛び出し、詐欺が発覚した。この「bag」はおそらく布の袋のことで、16世紀にはすでに比喩として使われていた記録がある。" },
-  { idiom: "Once in a blue moon", meaning: "「めったにない」「ごくたまに」という意味。", story: "「ブルームーン」とは1か月に2度満月が来る珍しい現象のこと。平均で約2〜3年に1度しか起きない。16世紀に「あり得ないこと」を指す表現として登場し、やがて「非常に稀なこと」を意味するようになった。" },
-  { idiom: "Spill the beans", meaning: "「秘密をしゃべる」「うっかり本当のことを言ってしまう」という意味。", story: "古代ギリシャで投票に豆を使っていたことが起源とされる。白い豆が賛成、黒い豆が反対を表し、こぼれると結果が公になってしまった。20世紀初頭のアメリカで広まり、英国にも定着した表現だ。" },
-  { idiom: "Hit the nail on the head", meaning: "「的確に言い当てる」「まさにその通り」という意味。", story: "大工仕事で釘を正確に頭に打つことが由来。15世紀のラテン語の表現にも類似のものがあり、ヨーロッパ全体で古くから使われてきた。現在では何かをズバリ言い当てたときに使われる非常にポジティブな表現だ。" },
-  { idiom: "Burning the midnight oil", meaning: "「夜遅くまで働く・勉強する」という意味。", story: "電気がなかった時代、夜遅くまで仕事や勉強をするにはオイルランプが必要だった。詩人フランシス・クワールズが1635年の詩でこの表現を使ったのが初出とされる。現代でも受験生や締め切りに追われるビジネスマンの状況を描写するのに使われる。" },
-  { idiom: "Bite off more than you can chew", meaning: "「身の丈に合わないことを引き受ける」「手に負えないことをしようとする」という意味。", story: "噛みきれないほど大きな食べ物を口に入れてしまう様子から。アメリカ南部でタバコを噛む習慣があり、一度に噛める量以上を口に含もうとする行為に由来するという説もある。19世紀後半から使われ始めた表現だ。" },
-  { idiom: "Pulling someone's leg", meaning: "「からかう」「冗談を言う」という意味。", story: "19世紀のスリの手口から来ているという説がある。仲間が足を引っ張って注意をそらし、その隙に財布を盗むという手法だ。しかし現在では悪意なく「冗談を言う」という軽いニュアンスで使われることがほとんど。" },
-  { idiom: "The ball is in your court", meaning: "「あとはあなた次第」「決断はあなたに委ねられている」という意味。", story: "テニスコートから来た表現。相手のコートにボールがある間は自分には何もできず、相手が打ち返すのを待つしかない。1960年代から比喩的に使われるようになり、ビジネスの交渉場面でもよく使われる。" },
-  { idiom: "Throw in the towel", meaning: "「諦める」「降参する」という意味。", story: "ボクシングで、選手のコーナーにいるトレーナーがリングにタオルを投げ込んで棄権を意味したことが起源。20世紀初頭にスポーツ用語として使われ始め、日常会話にも広まった。「ギブアップ」と同じニュアンス。" },
-  { idiom: "Under the weather", meaning: "「体調が悪い」「気分がすぐれない」という意味。", story: "船乗りの言葉に由来する。嵐などで船の甲板が荒れているとき、船酔いした船員は船の下部（風下・weather側の下）に移動して休んだことから。19世紀の航海時代に生まれた表現で、現在でも軽い体調不良を表すのに広く使われる。" },
-  { idiom: "Hit the sack", meaning: "「寝る」「就寝する」という意味。", story: "かつてのベッドは藁を入れた麻袋（sack）で作られており、就寝することを「袋に入る」と表現した。20世紀のアメリカ軍スラングとして広まり、英国にも伝わった。「hit the hay」も同じ意味の類似表現。" },
-  { idiom: "Straight from the horse's mouth", meaning: "「信頼できる情報源から直接聞いた」という意味。", story: "馬の年齢を知る最も確実な方法は歯を見ることで、馬自身の「口」が最も正確な情報源だった。競馬の世界から生まれた表現で、20世紀初頭から使われている。一次情報や信頼できる情報を指すときに使う。" },
-  { idiom: "A penny for your thoughts", meaning: "「何を考えているの？」という意味。相手の考えを聞きたいときに使う。", story: "16世紀のトーマス・モアの著作に最初の記録がある。当時の1ペニーは今よりはるかに価値があった。無口な相手や物思いにふけっている人に「考えを教えてくれれば1ペニーあげる」と言ったことが由来。" },
-  { idiom: "On the fence", meaning: "「どちらともつかない」「態度を決めかねている」という意味。", story: "フェンスの上に座って、どちらの側に降りるか決められない状態を表す。19世紀アメリカの政治用語として広まり、選挙で特定候補を支持しない有権者を指していた。現在では日常的な優柔不断も指す。" },
-  { idiom: "Burn bridges", meaning: "「関係を断つ」「退路を断つ」という意味。", story: "戦争で敵の追撃を防ぐために橋を燃やし、引き返せなくした戦術から。ジュリアス・シーザーもこの戦術を用いたとされる。現代では人間関係や仕事上のつながりを完全に断つことを指す。" },
-  { idiom: "Beat around the bush", meaning: "「遠回しに言う」「本題を避ける」という意味。", story: "鳥を狩る際、藪を棒で叩いて鳥を追い出す「打ち手」の役割から。本命の仕事（鳥を捕まえること）をせず、藪を叩くばかりの様子が由来。15世紀の詩にも登場する古い表現だ。" },
-  { idiom: "Caught red-handed", meaning: "「現行犯で捕まる」「証拠を握られる」という意味。", story: "中世スコットランドの法律に由来する。獣を密猟した場合、その動物の血が手についているうちに捕まれば有罪の証拠となった。15世紀のスコットランドの法典に記録があり、英国全土に広まった。" },
-  { idiom: "Bite the dust", meaning: "「死ぬ」「失敗する」「倒れる」という意味。", story: "ホメロスの叙事詩に類似の表現があり、戦場で倒れた兵士が地面の砂（dust）に顔をつける描写に由来。西部劇映画で多用されたことで現代に広まった。現在ではプロジェクトの失敗にも使われる。" },
-  { idiom: "Let sleeping dogs lie", meaning: "「寝た子を起こすな」「余計なことをして問題を起こすな」という意味。", story: "眠っている犬を起こすと噛まれる危険があることから。チョーサーの14世紀の作品にも類似の表現が登場する非常に古い慣用句。英国では穏やかに問題を避ける文化と結びつき、今でもよく使われる。" },
-  { idiom: "Speak of the devil", meaning: "「噂をすれば影」という意味。話題にしていた人がちょうど現れたときに使う。", story: "「悪魔の名を口にすると悪魔が現れる」というキリスト教的な迷信から。17世紀の英国で記録が残り、悪魔の名を言うことを禁じる宗教的戒めが日常表現に変化した。今では悪意なく使われるユーモラスな表現。" },
-  { idiom: "Give the cold shoulder", meaning: "「冷たくあしらう」「無視する」という意味。", story: "中世ヨーロッパで、歓迎しない客人には温かい食事ではなく冷たい肩肉（cold shoulder of mutton）を出したという説がある。スコットランドの作家ウォルター・スコットが19世紀に使って広めた。" },
-  { idiom: "Not my cup of tea", meaning: "「自分の趣味ではない」「好みではない」という意味。", story: "英国の紅茶文化から生まれた表現。紅茶は英国人にとって非常に個人的な好みがある飲み物で、自分の好みに合わないものを「自分のカップのお茶ではない」と表現した。20世紀初頭から記録されている。" },
-  { idiom: "Kick the bucket", meaning: "「死ぬ」という意味の婉曲表現。", story: "中世の絞首刑で罪人が乗る桶を蹴る処刑方法が由来とされる。また豚を屠殺する際の木製の桶を指すという説もある。16世紀から使われている表現で、ユーモラスなニュアンスを持つ。" },
-  { idiom: "The whole nine yards", meaning: "「全部」「すべて」という意味。何もかも含めたすべてを指す。", story: "第二次世界大戦中の戦闘機の機銃弾薬帯の長さ（約9ヤード）から来ているという説が有力。全弾を撃ち尽くすことから「全力を出す・全部出す」という意味になった。正確な起源は今も議論が続く謎の多い表現。" },
-  { idiom: "Turn a blind eye", meaning: "「見て見ぬふりをする」「意図的に無視する」という意味。", story: "ナポレオン戦争中の海軍提督ホレーショ・ネルソンが、コペンハーゲン海戦で撤退命令を望遠鏡で見るよう言われた際、視力のない右目に望遠鏡を当てて「命令が見えない」と言ったという逸話が有名な由来とされる。" },
-  { idiom: "The straw that broke the camel's back", meaning: "「我慢の限界を超えさせた最後の一押し」という意味。", story: "重い荷物を運ぶラクダに少しずつ藁を載せていくと、最後の一本で倒れてしまうという比喩から。アラビアの格言に由来し、チャールズ・ディケンズの作品にも登場する。限界点を表す非常に視覚的な表現。" },
-  { idiom: "A blessing in disguise", meaning: "「災い転じて福となす」という意味。一見悪いことが結果的に良いことになること。", story: "18世紀の詩人ジェームズ・ハーヴェイの作品に初出が確認されている。宗教的な考え方、つまり神の意志は人間には理解できないが最終的には良い方向に向かうという思想が背景にある。" },
-  { idiom: "Bite the hand that feeds you", meaning: "「恩人に背く」「世話になっている人を傷つける」という意味。", story: "犬や家畜に餌をやっている手を噛まれるという文字通りの情景から。エドマンド・バークが1790年の著作でこの表現を使い、広まった。忘恩や背信の行為を批判するときに使われる表現。" },
-  { idiom: "Don't judge a book by its cover", meaning: "「外見で判断するな」という意味。", story: "19世紀に生まれたとされるが、正確な起源は不明。本の装丁が必ずしも内容の良し悪しを反映しない、という経験から生まれた知恵。20世紀に入ってから広く使われるようになり、今や世界共通の格言となっている。" },
-  { idiom: "Kill two birds with one stone", meaning: "「一石二鳥」という意味。一つの行動で二つの目的を達成すること。", story: "文字通り、一つの石で二羽の鳥を倒すという狩りの技から。ローマ時代にも類似の表現があり、非常に古い知恵を反映している。英語圏では最も古くから使われている慣用句の一つとされる。" },
-  { idiom: "Costs a pretty penny", meaning: "「かなりの高額」「相当なお金がかかる」という意味。", story: "「pretty」はここで「かなり・相当」という意味で使われ、「penny」は金額全般を表す。18世紀の英国文学に登場する表現で、「高い」とはっきり言わずに婉曲的に値段の高さを伝える英国らしいユーモア。" },
-  { idiom: "Over the moon", meaning: "「大喜び」「非常に幸せ」という意味。", story: "マザーグースの童謡「Hey Diddle Diddle」に登場する「牛が月を飛び越えた」という非現実的な情景から。19世紀には比喩的に使われており、英国では特に好んで使われる表現。サッカーの監督がよくインタビューで使うことでも有名。" },
-  { idiom: "Feeling under the weather", meaning: "「体調が優れない」「気分がよくない」という意味。", story: "航海用語に由来する。嵐の際、船酔いした乗組員は風上の甲板から風下の下の方（under the weather side）に移動した。19世紀の航海日誌にもこの表現が見られ、英国の海洋文化から生まれた慣用句。" },
-  { idiom: "Barmy", meaning: "「頭がおかしい」「常軌を逸している」という意味のイギリス英語特有のスラング。", story: "「barm」とはビールの醸造過程で生じる泡のこと。泡のようにフワフワしていて中身がない＝頭がおかしいという比喩。16世紀のイングランドで生まれた純粋な英国語で、アメリカ英語にはほとんど見られない。" },
-  { idiom: "Take the biscuit", meaning: "「呆れるほどひどい」「度を超している」という意味。良い意味でも皮肉な意味でも使う。", story: "コンテストで最も優秀な者にビスケットを贈る習慣から来ているとされる。英国の紅茶文化とビスケットへの愛着が生んだ表現で、アメリカでは「take the cake」という類似表現が使われる。" },
-  { idiom: "Chin up", meaning: "「元気を出して」「しっかりして」という意味の励ましの表現。", story: "顎（chin）を下に向けることは落ち込みや悲しみの姿勢を示す。逆に顎を上げることは自信や前向きさの象徴。英国では特に第二次世界大戦中に「Keep your chin up」として励ましの言葉として広まった。" },
-  { idiom: "In a pickle", meaning: "「困った状況にいる」「窮地に立たされている」という意味。", story: "16世紀のオランダ語「in de pekel zitten」（塩漬け液の中に座っている）から来たとされる。シェイクスピアの「テンペスト」にも登場する古い表現で、ピクルス液のように抜け出せない状況を表す。" },
-  { idiom: "On the blink", meaning: "「故障している」「調子が悪い」という意味。主に機械に対して使う。", story: "「blink」はランプが点滅する様子を指し、電球がちらつき始めると故障の前兆だったことから。20世紀初頭に電気が一般家庭に普及する中で生まれた表現。英国では家電の不調を表すのによく使われる。" },
-  { idiom: "Cock-up", meaning: "「大失敗」「へま」という意味。主に英国英語で使われるくだけた表現。", story: "印刷業の用語が起源とされる。活版印刷で文字が逆さになった（cock up）場合に使われた言葉が転じた説や、銃のコック（撃鉄）に由来する説など諸説ある。英国らしい自虐的ユーモアを含む表現。" },
-  { idiom: "Brilliant", meaning: "「素晴らしい！」「最高！」という感嘆の意味。英国英語では多様な場面で使われる。", story: "元々はフランス語の「brillant」（輝く）から来た言葉。英国では20世紀後半から感嘆詞的に使われるようになり、「great」や「awesome」の英国版として定着。皮肉的に使われることもある興味深い言葉。" },
-  { idiom: "Chuffed to bits", meaning: "「とても嬉しい」「大満足」という意味の英国独特の表現。", story: "「chuffed」は満足した様子を表す英国スラングで、蒸気機関車が満足そうに煙を吐く音「chuff」から来ているという説がある。「to bits」は強調表現。北部イングランドで特によく使われる温かみのある表現。" },
-  { idiom: "Blimey", meaning: "「なんと！」「まさか！」という驚きを表す感嘆詞。", story: "「Blind me（神よ、私を盲目にしてください）」が縮まった表現とされ、神への冒涜を避けるための婉曲形として生まれた。19世紀のロンドンのコックニー（下町）方言から広まった純粋な英国語。" },
-  { idiom: "Faff about", meaning: "「ぐずぐずする」「無駄に時間を使う」という意味の英国英語表現。", story: "18世紀の英語「faff」はもともと風が吹き乱れる様子を表した言葉。何も決まらずぐるぐると動き続ける様子が「ぐずぐずすること」に転じた。英国人が時間の無駄遣いを嘆くときによく使う表現。" },
-  { idiom: "Dodgy", meaning: "「怪しい」「信用できない」「質が悪い」という意味の英国スラング。", story: "「dodge」（素早く身をかわす）から派生した言葉で、19世紀に登場した。法律や道徳の境界線をすり抜けるような人物や物事を指す。英国では食べ物の質が悪いときにも「a bit dodgy」とよく使われる。" },
+  {idiom:"Bob's your uncle",vibe:"casual",meaning:"何かを簡単に達成できること。「あっという間に完了！」",example:"Just add the flour, mix it up, and Bob's your uncle — perfect scones!",uk:"英国以外ではほぼ使われない純粋な英国表現。料理番組でも頻出。",story:"1887年、英国首相ロバート・セシルが甥のアーサー・バルフォアを要職に任命したことが由来とされる。縁故採用があまりにもあっけなく行われたことから「はい、できあがり！」という意味が生まれた。当時の英国社会での縁故主義を皮肉った表現でもある。"},
+  {idiom:"Not my cup of tea",vibe:"formal",meaning:"自分の好みや趣味ではないこと。",example:"Horror films are not really my cup of tea — I prefer comedies.",uk:"英国の紅茶文化が生んだ表現。紅茶への個人的なこだわりが強い英国人らしい婉曲な断り方。",story:"紅茶は英国人にとって非常に個人的な好みがある飲み物で、自分の好みに合わないものを「自分のカップのお茶ではない」と表現した。20世紀初頭から記録されており、英国の紅茶文化が生んだ最も象徴的な表現のひとつ。"},
+  {idiom:"Take the biscuit",vibe:"sharp",meaning:"「呆れるほどひどい」「度を超している」という意味。",example:"He turned up two hours late with no apology — that really takes the biscuit!",uk:"アメリカでは「take the cake」と言う。ビスケットへの愛が深い英国らしい表現。",story:"コンテストで最も優秀な者にビスケットを贈る習慣から来ているとされる。英国の紅茶文化とビスケットへの愛着が生んだ表現。皮肉やあきれた感情を表すときに使われる英国らしいユーモア。"},
+  {idiom:"Blimey",vibe:"cheeky",meaning:"「なんと！」「まさか！」という驚きを表す感嘆詞。",example:"Blimey, you've eaten the whole cake by yourself?!",uk:"コックニー（ロンドン下町）発祥の純英国語。外国人が使うと「英国らしい！」と喜ばれる。",story:"「Blind me（神よ、私を盲目にしてください）」が縮まった表現とされ、神への冒涜を避けるための婉曲形として生まれた。19世紀のロンドンのコックニー方言から広まった純粋な英国語。"},
+  {idiom:"Gobsmacked",vibe:"casual",meaning:"「あっけにとられた」「言葉を失うほど驚いた」という意味。",example:"I was absolutely gobsmacked when I found out I'd won the prize.",uk:"「gob（口）」＋「smacked（叩かれた）」。驚きで口を手で覆う仕草から。北部英国方言発祥。",story:"「gob」は英国スラングで「口」のこと。驚きで思わず口を手で覆う仕草を表している。スコットランドやイングランド北部の方言から広まった表現で、英国らしさ全開の言葉。"},
+  {idiom:"Knackered",vibe:"casual",meaning:"「くたくたに疲れた」「へとへと」という意味。",example:"After that hike, I was absolutely knackered and went straight to bed.",uk:"「knacker（老いた馬を処分する業者）」から。疲れ果てた状態を表す最もよく使われる英国スラングのひとつ。",story:"「knacker」とはもともと老いた馬を処分する業者のこと。使い物にならなくなった馬を指す言葉が転じて「疲れ果てた状態」を表すようになった。英国では日常的に非常によく使われる口語表現。"},
+  {idiom:"Cheeky",vibe:"cheeky",meaning:"「生意気な」「図々しい」だが愛嬌ある悪ふざけにも使う。",example:"Go on then, I'll have a cheeky biscuit with my tea.",uk:"英国では否定的な意味だけでなく「憎めない悪ふざけ」というポジティブな意味でも頻繁に使われる。",story:"「cheek（頬）」から来た言葉。頬を張るほど生意気なことを言う、という意味合いから。英国では必ずしも否定的ではなく「cheeky chap（憎めない悪ガキ）」のように親しみを込めて使われることも多い。"},
+  {idiom:"Gutted",vibe:"casual",meaning:"「ひどく落胆した」「打ちのめされた」という意味。",example:"I was absolutely gutted when my team lost in the final minute.",uk:"特にサッカーファンがよく使う。魚の内臓を取り出す（gut）ように心が空っぽになる感覚を表す。",story:"魚の内臓を取り出す（gut）ように、心の中身が空っぽになるほどショックを受けた状態を表す。1980年代のイギリスで広まったスラングで、特にサッカーファンがチームの敗北を嘆くときによく使う。"},
+  {idiom:"It's not cricket",vibe:"formal",meaning:"「フェアじゃない」「ルール違反だ」という意味。",example:"Telling the boss about what he said at the party — that's just not cricket.",uk:"クリケットは英国の国民的スポーツ。紳士的なフェアプレー精神の象徴として使われてきた。",story:"クリケットは英国の国民的スポーツで、フェアプレーの精神の象徴とされてきた。19世紀のビクトリア朝時代に生まれた表現で、スポーツの枠を超えて「紳士的でない行為」全般を指すようになった。"},
+  {idiom:"Spend a penny",vibe:"cheeky",meaning:"「トイレに行く」という意味の婉曲表現。",example:"Excuse me, I just need to spend a penny — back in a moment.",uk:"かつて英国の公衆トイレは1ペニーで入れた。現在でもユーモラスな表現として使われる純英国語。",story:"かつて英国の公衆トイレは1ペニーを入れないと入れなかったことから生まれた表現。1855年にロンドンに初めて有料公衆トイレが設置されたときから使われ始めた。"},
+  {idiom:"Mad as a hatter",vibe:"casual",meaning:"「完全に頭がおかしい」という意味。",example:"My neighbour talks to his plants every morning — he's mad as a hatter!",uk:"19世紀の帽子職人が水銀中毒で精神を病んだ歴史的背景がある。アリスの「マッド・ハッター」で有名。",story:"18〜19世紀の帽子職人（hatter）は、フェルト加工に水銀を使っていたため水銀中毒になることが多く、精神的におかしくなる職業病があった。ルイス・キャロルの「不思議の国のアリス」に登場するマッド・ハッターもこれが由来。"},
+  {idiom:"Taking the mickey",vibe:"cheeky",meaning:"「からかう」「馬鹿にする」という意味の英国スラング。",example:"Are you taking the mickey? There's no way that actually happened!",uk:"コックニーのライミングスラング「Mickey Bliss＝piss」から。英国では非常によく使われる。",story:"コックニーのライミングスラング「Mickey Bliss＝piss（尿）」から来たという説が有力。「take the piss（馬鹿にする）」の婉曲表現として「taking the mickey」が生まれた。英国では非常によく使われる表現。"},
+  {idiom:"Dodgy",vibe:"casual",meaning:"「怪しい」「信用できない」「質が悪い」という意味の英国スラング。",example:"I wouldn't eat that chicken — it smells a bit dodgy.",uk:"「dodge（身をかわす）」から。英国では食べ物・人・状況など幅広く使われる万能スラング。",story:"「dodge」（素早く身をかわす）から派生した言葉で、19世紀に登場した。法律や道徳の境界線をすり抜けるような人物や物事を指す。英国では食べ物の質が悪いときにも「a bit dodgy」とよく使われる。"},
+  {idiom:"Faff about",vibe:"casual",meaning:"「ぐずぐずする」「無駄に時間を使う」という意味。",example:"Stop faffing about and get ready — we're going to be late!",uk:"英国人が時間の無駄遣いを嘆くときに使う代表的な表現。北部英語の方言から広まった。",story:"18世紀の英語「faff」はもともと風が吹き乱れる様子を表した言葉。何も決まらずぐるぐると動き続ける様子が「ぐずぐずすること」に転じた。英国人が時間の無駄遣いを嘆くときによく使う表現。"},
+  {idiom:"Chin up",vibe:"formal",meaning:"「元気を出して」「しっかりして」という意味の励ましの表現。",example:"Chin up! You'll find another job soon, I'm sure of it.",uk:"第二次世界大戦中に「Keep your chin up」として広まった。英国人の「感情を見せない」文化を反映した表現。",story:"顎（chin）を下に向けることは落ち込みや悲しみの姿勢を示す。逆に顎を上げることは自信や前向きさの象徴。英国では特に第二次世界大戦中に「Keep your chin up」として励ましの言葉として広まった。"},
+  {idiom:"Posh",vibe:"cheeky",meaning:"「上品な」「高級な」「お金持ちっぽい」という意味。",example:"They took us to a really posh restaurant — three courses and everything!",uk:"語源が未だに謎の英国語。スパイス・ガールズのメンバー「Posh Spice」でも有名になった。",story:"「Port Out, Starboard Home」の頭文字という説が有名。インド航路の船で日差しを避けるため行きは左舷、帰りは右舷の高級船室を使ったという話だ。ただしこの説は証拠が薄く、語源は今も謎のままとされる。"},
+  {idiom:"Miffed",vibe:"casual",meaning:"「ちょっとムッとした」「軽く怒っている」という意味。",example:"I was a bit miffed that nobody mentioned my birthday at work.",uk:"強い怒りではなく控えめな不満を表す。感情を大げさに表現しない英国文化を反映した言葉。",story:"17世紀のドイツ語「muff」（不快感を表す感嘆詞）に由来するとされる。強い怒りではなく、ちょっと不満に思っている程度のニュアンスが英国人らしい控えめな感情表現として定着した。"},
+  {idiom:"Quids in",vibe:"casual",meaning:"「大儲け」「得をしている」という意味。",example:"If we sell the tickets at that price, we'll be quids in!",uk:"「quid」は英国スラングで1ポンド。「quid pro quo（等価交換）」のラテン語が語源とされる。",story:"「quid」は英国のスラングで1ポンドのこと。語源はラテン語の「quid pro quo（等価交換）」から来ているとされる。「quids in」で複数のポンドが手に入った状態、つまり「儲かった」という意味になった。"},
+  {idiom:"Flogging a dead horse",vibe:"formal",meaning:"「無駄な努力をする」「すでに終わったことにこだわる」という意味。",example:"Trying to convince him — you're flogging a dead horse. He won't change his mind.",uk:"19世紀の英国議会で、決着した議題を蒸し返す行為を批判する文脈で使われたのが初出。",story:"死んだ馬をいくら鞭打っても動かないことから。19世紀の英国議会で、すでに決着がついた議題を蒸し返す行為を批判する文脈で使われたのが最初の記録とされる。"},
+  {idiom:"The full monty",vibe:"casual",meaning:"「全部」「完全なもの」何も省略しないすべてを指す。",example:"I want the full English — the full monty, please. Eggs, bacon, everything!",uk:"モンゴメリー元帥がフルイングリッシュブレックファストを毎朝食べていたという説が有力。1997年の映画でも有名。",story:"モンゴメリー元帥（Field Marshal Montgomery）が毎朝フルイングリッシュブレックファストを食べていたことが由来という説が有力。1997年の映画「フル・モンティ」でさらに有名になった英国らしい表現。"},
+  {idiom:"Lose the plot",vibe:"sharp",meaning:"「正気を失う」「何が何だかわからなくなる」という意味。",example:"The manager completely lost the plot when we told him the results.",uk:"1980〜90年代の英国で広まったスラング。「plot（筋書き）」を見失うことから転じた現代的な表現。",story:"小説や映画でプロット（筋書き）を見失うことから転じた表現。1980〜90年代の英国で広まったスラングで、極度のパニック状態や混乱を指す。「He's completely lost the plot」のように使う。"},
+  {idiom:"Horses for courses",vibe:"formal",meaning:"「人それぞれ向き不向きがある」「適材適所」という意味。",example:"He's great at detail work but not at presenting — horses for courses.",uk:"英国の競馬文化から生まれた表現。馬によって得意なコースが違うことを人間に例えた19世紀の知恵。",story:"競馬の世界から生まれた表現。馬によって得意なコース（砂地・芝・距離など）が違うことから、人間にも同じことが当てはまるという知恵。19世紀末から使われており、英国の競馬文化を反映した慣用句。"},
+  {idiom:"Cheesed off",vibe:"casual",meaning:"「うんざりしている」「いらいらしている」という意味。",example:"I'm really cheesed off with this weather — it's been raining for a week!",uk:"第二次世界大戦中の英国軍スラングが起源とされる。古くなったチーズの不快な臭いから来たという説も。",story:"第二次世界大戦中の英国軍スラングが起源とされる。「cheesed」の正確な語源は不明だが、チーズが古くなって嫌な臭いを放つことから「不快な気分」を表すようになったという説がある。"},
+  {idiom:"Keep your hair on",vibe:"cheeky",meaning:"「落ち着いて」「怒らないで」という意味。",example:"Keep your hair on! I'm only five minutes late.",uk:"アメリカの「keep your shirt on」に相当する英国版。相手をなだめるときに使うユーモラスな表現。",story:"怒ると体温が上がり髪が乱れることから、「髪を乱すな＝落ち着け」という意味が生まれたとされる。アメリカの「keep your shirt on」に相当する英国版の表現で、相手をなだめるときに使う。"},
+  {idiom:"Have a butcher's",vibe:"cheeky",meaning:"「見る」「ちょっと見せて」という意味のコックニースラング。",example:"Let me have a butcher's at that map — I think I know where we are.",uk:"コックニーのライミングスラング「butcher's hook＝look」から。ロンドン下町文化の象徴的な表現。",story:"ロンドンのコックニー方言のライミングスラングで「butcher's hook＝look（見る）」から来ている。コックニーは単語を韻を踏む別の言葉で置き換える独特のスラングを持つ。「Have a butcher's at this!（これ見て！）」のように使う。"},
+  {idiom:"Sod's law",vibe:"casual",meaning:"「うまくいかないときは必ずうまくいかない」マーフィーの法則の英国版。",example:"I washed my car this morning — Sod's law it rained this afternoon.",uk:"アメリカの「Murphy's law」と同じ概念だが、英国版は特に最悪のタイミングで起きる皮肉なニュアンスが強い。",story:"「sod」は英国スラングで軽い悪口として使われる言葉。アメリカの「Murphy's law」と同じ概念だが、英国版は特に「最悪のタイミングで最悪のことが起きる」という皮肉なニュアンスが強い。"},
+  {idiom:"Nail your colours to the mast",vibe:"formal",meaning:"「自分の立場をはっきりさせる」「信念を曲げない」という意味。",example:"It's time to nail your colours to the mast and tell them which side you're on.",uk:"海戦で旗をマストに釘付けにして降伏しない意思を示した。ネルソン提督の時代の勇敢さを表す表現。",story:"海戦で降伏するときは旗（colours）を降ろすが、旗をマストに釘付けにすると降ろせなくなり「絶対に降伏しない」という意思表示になった。ホレーショ・ネルソン提督の時代に生まれた勇敢さを表す表現。"},
+  {idiom:"Put a sock in it",vibe:"sharp",meaning:"「黙れ」「うるさい」という意味の口語表現。",example:"Oh, put a sock in it! We've heard that story a hundred times.",uk:"蓄音機のラッパに靴下を詰めて音を小さくした時代から。現在はユーモラスに「静かにして」と言うときに使う。",story:"蓄音機（グラモフォン）のラッパ部分に靴下を詰めて音量を下げていた時代から来た表現という説がある。19世紀末〜20世紀初頭の英国で生まれたとされ、現在でもユーモラスに「静かにして」と言うときに使われる。"},
+  {idiom:"Tickled pink",vibe:"cheeky",meaning:"「大喜び」「とても嬉しい」という意味。",example:"She was tickled pink when she found out she'd got the job.",uk:"くすぐられると顔が赤くなることから。「over the moon」と並んで英国で嬉しさを表す定番表現。",story:"くすぐられると（tickled）顔が赤くなること（pink）から。20世紀初頭から使われている表現で、「over the moon」と同様に英国で嬉しい気持ちを表すときによく使われるカラフルな表現だ。"},
+  {idiom:"Bodge it",vibe:"casual",meaning:"「雑に修理する」「とりあえず間に合わせでやっつける」という意味。",example:"I bodged the leak with some tape — it'll do for now.",uk:"英国のDIY文化と深く結びついた表現。「bodge job」という形でもよく使われる英国らしい実用的な言葉。",story:"中世英語の「bocche」（修繕する）から来たとされる。英国のDIY文化と深く結びついた表現で、完璧ではないけれど何とか機能する修理のことを指す。「bodge job」という形でもよく使われる。"},
+  {idiom:"All mouth and no trousers",vibe:"sharp",meaning:"「口だけで実行が伴わない」「はったりだけの人」という意味。",example:"He promised to fix everything, but he's all mouth and no trousers.",uk:"英国北部の方言から来た表現。「口はあるがズボンがない」という奇妙な比喩が英国らしいユーモア。",story:"英国北部の方言から来た表現。「口はあるがズボンがない」という奇妙な比喩で、見かけ倒し・言葉だけで行動しない人を指す。元々は「all mouth and trousers」（威張っているだけ）という形だったとも言われる。"},
 ];
 
-let idx = 0;
-let order = [];
-let favorites = JSON.parse(localStorage.getItem('bf_favs') || '[]');
-let isFlipped = false;
+const VIBE_LABELS = {formal:"🎩 フォーマル",casual:"😊 カジュアル",cheeky:"😏 愛嬌あり",sharp:"😤 キツめ"};
+let cardIdx = 0;
+let favorites = JSON.parse(localStorage.getItem('bf_favs2')||'[]');
 let isSpeaking = false;
-
-function shuffle(arr) {
-  let a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
+let dragCard = null, startX = 0, startY = 0, curX = 0, curY = 0;
 
 function init() {
-  order = shuffle(IDIOMS.map((_, i) => i));
-  buildProgress();
-  showCard();
+  renderCards();
+  updateFavCount();
 }
 
-function current() { return IDIOMS[order[idx]]; }
-
-function showCard() {
-  const c = current();
-  isFlipped = false;
-  document.getElementById('card').classList.remove('flipped');
-
-  document.getElementById('front-content').innerHTML = `
-    <div class="label">British Idiom</div>
-    <div class="idiom">"${c.idiom}"</div>
-    <div class="label">意味</div>
-    <div class="meaning">${c.meaning}</div>
-    <div class="hint">タップして裏話を見る →</div>
-  `;
-  document.getElementById('back-content').innerHTML = `
-    <div class="back-idiom">"${c.idiom}"</div>
-    <div class="story-label">📜 語源・裏話</div>
-    <div class="story">${c.story}</div>
-  `;
-
-  const isFav = favorites.some(f => f.idiom === c.idiom);
-  const favBtn = document.getElementById('fav-btn');
-  favBtn.textContent = isFav ? '❤️' : '🤍';
-  favBtn.classList.toggle('active', isFav);
-
-  updateProgress();
-  document.getElementById('counter').textContent = `${idx + 1} / ${IDIOMS.length}`;
+function renderCards() {
+  const stack = document.getElementById('stack');
+  // remove old cards (not story panel)
+  stack.querySelectorAll('.card').forEach(c => c.remove());
+  // render up to 3 cards (stacked)
+  const panel = document.getElementById('story-panel');
+  for (let i = Math.min(cardIdx + 2, IDIOMS.length - 1); i >= cardIdx; i--) {
+    const d = IDIOMS[i];
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.idx = i;
+    const scale = 1 - (i - cardIdx) * 0.03;
+    const ty = (i - cardIdx) * 8;
+    card.style.transform = `scale(${scale}) translateY(${ty}px)`;
+    card.style.zIndex = IDIOMS.length - i;
+    card.innerHTML = `
+      <div class="swipe-hint hint-right">⭐ お気に入り</div>
+      <div class="swipe-hint hint-left">次へ →</div>
+      <div class="swipe-hint hint-up">📖 裏話</div>
+      <div class="card-front">
+        <div class="card-top">
+          <span class="vibe-badge vibe-${d.vibe}">${VIBE_LABELS[d.vibe]}</span>
+          <span class="uk-badge">🇬🇧</span>
+        </div>
+        <div class="idiom-main">"${d.idiom}"</div>
+        <div class="meaning-text">${d.meaning}</div>
+        <div class="example-box">
+          <div class="example-label">💬 例文</div>
+          <div class="example-text">${d.example}</div>
+        </div>
+        <div class="uk-note">
+          <div class="uk-note-label">🇬🇧 イギリスのニュアンス</div>
+          ${d.uk}
+        </div>
+      </div>`;
+    stack.insertBefore(card, panel);
+    if (i === cardIdx) setupDrag(card);
+  }
+  updateCounter();
 }
 
-function buildProgress() {
-  const el = document.getElementById('progress');
-  el.innerHTML = IDIOMS.map((_, i) => `<div class="pip" id="pip-${i}"></div>`).join('');
+function setupDrag(card) {
+  const onStart = (x, y) => { dragCard = card; startX = x; startY = y; curX = 0; curY = 0; card.classList.add('dragging'); card.style.transition = 'none'; };
+  const onMove = (x, y) => {
+    if (!dragCard) return;
+    curX = x - startX; curY = y - startY;
+    const rot = curX * 0.08;
+    card.style.transform = `translate(${curX}px,${curY}px) rotate(${rot}deg)`;
+    const rh = card.querySelector('.hint-right'), lh = card.querySelector('.hint-left'), uh = card.querySelector('.hint-up');
+    rh.style.opacity = curX > 30 ? Math.min((curX-30)/60,1) : 0;
+    lh.style.opacity = curX < -30 ? Math.min((-curX-30)/60,1) : 0;
+    uh.style.opacity = curY < -30 ? Math.min((-curY-30)/60,1) : 0;
+  };
+  const onEnd = () => {
+    if (!dragCard) return;
+    dragCard.classList.remove('dragging');
+    dragCard.style.transition = 'transform 0.3s ease';
+    if (curX > 80) { doRight(); }
+    else if (curX < -80) { doLeft(); }
+    else if (curY < -80) { doUp(); }
+    else { dragCard.style.transform = `scale(1) translateY(0)`; dragCard = null; }
+  };
+  card.addEventListener('mousedown', e => onStart(e.clientX, e.clientY));
+  window.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+  window.addEventListener('mouseup', onEnd);
+  card.addEventListener('touchstart', e => { e.preventDefault(); onStart(e.touches[0].clientX, e.touches[0].clientY); }, {passive:false});
+  card.addEventListener('touchmove', e => { e.preventDefault(); onMove(e.touches[0].clientX, e.touches[0].clientY); }, {passive:false});
+  card.addEventListener('touchend', onEnd);
 }
 
-function updateProgress() {
-  document.querySelectorAll('.pip').forEach((p, i) => {
-    p.className = 'pip' + (i < idx ? ' seen' : i === idx ? ' current' : '');
-  });
+function doRight() {
+  dragCard = null;
+  const c = IDIOMS[cardIdx];
+  if (!favorites.find(f => f.idiom === c.idiom)) {
+    favorites.push(c);
+    localStorage.setItem('bf_favs2', JSON.stringify(favorites));
+    updateFavCount();
+  }
+  animateOut('right');
 }
 
-function flipCard() {
-  if (!current()) return;
-  isFlipped = !isFlipped;
-  document.getElementById('card').classList.toggle('flipped', isFlipped);
+function doLeft() { dragCard = null; animateOut('left'); }
+
+function doUp() {
+  dragCard = null;
+  const c = IDIOMS[cardIdx];
+  document.getElementById('story-idiom').textContent = '"' + c.idiom + '"';
+  document.getElementById('story-text').textContent = c.story;
+  document.getElementById('story-panel').classList.add('open');
 }
 
-function nextCard() {
-  stopSound();
-  idx = (idx + 1) % IDIOMS.length;
-  showCard();
+function closeStory() { document.getElementById('story-panel').classList.remove('open'); }
+
+function animateOut(dir) {
+  const stack = document.getElementById('stack');
+  const top = stack.querySelector(`.card[data-idx="${cardIdx}"]`);
+  if (!top) return;
+  top.style.transition = 'transform 0.35s ease, opacity 0.35s ease';
+  top.style.opacity = '0';
+  if (dir === 'right') top.style.transform = 'translate(140%,0) rotate(20deg)';
+  else top.style.transform = 'translate(-140%,0) rotate(-20deg)';
+  setTimeout(() => {
+    cardIdx = (cardIdx + 1) % IDIOMS.length;
+    renderCards();
+  }, 350);
 }
 
-function prevCard() {
-  stopSound();
-  idx = (idx - 1 + IDIOMS.length) % IDIOMS.length;
-  showCard();
+function updateCounter() {
+  document.getElementById('counter').textContent = `${cardIdx + 1} / ${IDIOMS.length}`;
 }
 
-function speak(text) {
-  speechSynthesis.cancel();
-  const utt = new SpeechSynthesisUtterance(text);
-  utt.lang = 'en-GB'; utt.rate = 0.85;
-  const voices = speechSynthesis.getVoices();
-  const v = voices.find(v => v.lang === 'en-GB') || voices.find(v => v.lang.startsWith('en'));
+function playSound() {
+  if (isSpeaking) { speechSynthesis.cancel(); isSpeaking = false; document.getElementById('sound-btn').classList.remove('playing'); return; }
+  const c = IDIOMS[cardIdx];
+  const utt = new SpeechSynthesisUtterance(c.idiom);
+  utt.lang = 'en-GB'; utt.rate = 0.82;
+  const v = speechSynthesis.getVoices().find(v => v.lang === 'en-GB') || speechSynthesis.getVoices().find(v => v.lang.startsWith('en'));
   if (v) utt.voice = v;
-  speechSynthesis.speak(utt);
-  return utt;
-}
-
-function playSound(e) {
-  e.stopPropagation();
-  if (!current()) return;
-  if (isSpeaking) { stopSound(); return; }
-  const utt = speak(current().idiom);
   isSpeaking = true;
   document.getElementById('sound-btn').classList.add('playing');
-  utt.onend = utt.onerror = () => {
-    isSpeaking = false;
-    document.getElementById('sound-btn').classList.remove('playing');
-  };
-}
-
-function stopSound() {
-  speechSynthesis.cancel();
-  isSpeaking = false;
-  document.getElementById('sound-btn').classList.remove('playing');
-}
-
-function toggleFav(e) {
-  e.stopPropagation();
-  const c = current();
-  const i = favorites.findIndex(f => f.idiom === c.idiom);
-  if (i === -1) {
-    favorites.push({ ...c });
-    document.getElementById('fav-btn').textContent = '❤️';
-    document.getElementById('fav-btn').classList.add('active');
-  } else {
-    favorites.splice(i, 1);
-  localStorage.setItem('bf_favs', JSON.stringify(favorites));
-    document.getElementById('fav-btn').textContent = '🤍';
-    document.getElementById('fav-btn').classList.remove('active');
-  }
-  localStorage.setItem('bf_favs', JSON.stringify(favorites));
-  updateFavCount();
-  if (document.getElementById('fav-view').classList.contains('visible')) renderFavList();
+  utt.onend = utt.onerror = () => { isSpeaking = false; document.getElementById('sound-btn').classList.remove('playing'); };
+  speechSynthesis.speak(utt);
 }
 
 function updateFavCount() {
@@ -301,10 +316,7 @@ function updateFavCount() {
 
 function renderFavList() {
   const el = document.getElementById('fav-list-container');
-  if (!favorites.length) {
-    el.innerHTML = '<div class="fav-empty">まだお気に入りがありません。<br>❤️ ボタンで追加しましょう！</div>';
-    return;
-  }
+  if (!favorites.length) { el.innerHTML = '<div class="fav-empty">右スワイプでお気に入りに追加！<br>❤️ ボタンでも追加できます。</div>'; return; }
   el.innerHTML = `<div class="fav-list">${favorites.map((f, i) => `
     <div class="fav-item">
       <div class="fav-item-header">
@@ -312,30 +324,31 @@ function renderFavList() {
           <div class="fav-item-idiom">"${f.idiom}"</div>
           <div class="fav-item-meaning">${f.meaning}</div>
         </div>
-        <button class="fav-toggle" onclick="toggleStory(${i})">📜 裏話</button>
-        <button class="fav-play" onclick="speak('${f.idiom.replace(/'/g, "\\'")}')">🔊</button>
+        <button class="fav-toggle" onclick="toggleFavStory(${i})">📜</button>
+        <button class="fav-play" onclick="speakText('${f.idiom.replace(/'/g,"\\'")}')">🔊</button>
         <button class="fav-remove" onclick="removeFav(${i})">✕</button>
       </div>
-      <div class="fav-item-story" id="fav-story-${i}">${f.story}</div>
+      <div class="fav-item-story" id="fs-${i}">${f.story}</div>
     </div>`).join('')}
   </div>`;
 }
 
-function toggleStory(i) {
-  const el = document.getElementById(`fav-story-${i}`);
-  el.classList.toggle('open');
-}
+function toggleFavStory(i) { document.getElementById(`fs-${i}`).classList.toggle('open'); }
 
 function removeFav(i) {
-  const removed = favorites[i];
   favorites.splice(i, 1);
+  localStorage.setItem('bf_favs2', JSON.stringify(favorites));
   updateFavCount();
-  const c = current();
-  if (c && c.idiom === removed.idiom) {
-    document.getElementById('fav-btn').textContent = '🤍';
-    document.getElementById('fav-btn').classList.remove('active');
-  }
   renderFavList();
+}
+
+function speakText(text) {
+  speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'en-GB'; utt.rate = 0.82;
+  const v = speechSynthesis.getVoices().find(v => v.lang === 'en-GB') || speechSynthesis.getVoices().find(v => v.lang.startsWith('en'));
+  if (v) utt.voice = v;
+  speechSynthesis.speak(utt);
 }
 
 function showTab(tab) {
@@ -345,20 +358,6 @@ function showTab(tab) {
   document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', isCards ? i === 0 : i === 1));
   if (!isCards) renderFavList();
 }
-
-// footer
-document.body.insertAdjacentHTML('beforeend', `
-  <a href="https://forms.gle/nsEHWgy7p5ZuvZBN7" target="_blank" style="
-    display:inline-block;margin-top:20px;padding:9px 20px;
-    border:1px solid #3d5c3d;border-radius:8px;background:#1e321e;
-    color:#8a9e8a;font-family:'Lato',sans-serif;font-size:0.78rem;
-    letter-spacing:1px;text-decoration:none;transition:all 0.2s;
-  " onmouseover="this.style.borderColor='#d4a843';this.style.color='#d4a843'"
-     onmouseout="this.style.borderColor='#3d5c3d';this.style.color='#8a9e8a'">
-    📩 お問い合わせ
-  </a>
-  <p style="margin-top:12px;font-size:0.7rem;color:#3d5c3d;letter-spacing:1px;">© 2026 Saki Miura — All rights reserved</p>
-`);
 
 speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
 speechSynthesis.getVoices();
